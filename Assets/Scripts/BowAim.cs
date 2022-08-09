@@ -25,22 +25,9 @@ public class BowAim : MonoBehaviour
               var mousePosition = aiming.ReadValue<Vector2>();
               var worldMousePosition = mainCamera.ScreenToWorldPoint(mousePosition);
               var mouseDirection = worldMousePosition - transform.position;
-              var directionRay = new Ray2D(transform.position, transform.up - transform.position);
-              var ang = Vector3.Angle(directionRay.direction, mouseDirection);
-              Debug.Log(ang);
-              var angle = Quaternion.Angle(transform.rotation, Quaternion.Euler(mouseDirection));
-              Debug.DrawLine(transform.position, transform.up - transform.position);
-              Debug.Log(angle);
-              int rotationWay;
-              if (ang > 90)
-              {
-                     rotationWay = 1;
-              }
-              else
-              {
-                     rotationWay = -1;
-              }
-              transform.Rotate(0, 0, rotationWay * rotationSpeed * Time.deltaTime);
+              mouseDirection.Normalize();
+              var angleAxisZ = Mathf.Atan2(mouseDirection.y, mouseDirection.x) * Mathf.Rad2Deg - 90f;
+              transform.rotation = Quaternion.Euler(0f, 0f, angleAxisZ);
        }
 
        private void OnDisable()
