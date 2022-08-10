@@ -6,6 +6,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private GameObject arrow;
     [SerializeField] private Transform shootPosition;
     private PlayerInput _playerInput;
+    private bool _hasArrow = true;
 
     private void Awake()
     {
@@ -21,7 +22,14 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot(InputAction.CallbackContext obj)
     {
+        if (!_hasArrow) return;
         Instantiate(arrow, shootPosition.position, shootPosition.rotation);
+        _hasArrow = false;
+    }
+
+    public void CatchArrow()
+    {
+        _hasArrow = true;
     }
 
     private void OnDisable()

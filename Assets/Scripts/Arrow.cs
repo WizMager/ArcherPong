@@ -22,7 +22,14 @@ public class Arrow : MonoBehaviour
                         transform.RotateAround(transform.position, transform.forward, angle);
                         Debug.DrawLine(transform.position, reflectionVector, Color.red, 1000f);
                         CalculateReflection();
-                } 
+                }
+
+                if (col.CompareTag("Player"))
+                {
+                        var playerShoot = col.GetComponent<PlayerShoot>();
+                        playerShoot.CatchArrow();
+                        Destroy(gameObject);
+                }
         }
 
         private void Update()
