@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 768793731}
   - component: {fileID: 768793732}
   - component: {fileID: 768793733}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LeftWall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -466,7 +466,7 @@ GameObject:
   - component: {fileID: 1016183608}
   - component: {fileID: 1016183609}
   - component: {fileID: 1016183610}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DownWall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -599,7 +599,7 @@ GameObject:
   - component: {fileID: 1184226987}
   - component: {fileID: 1184226988}
   - component: {fileID: 1184226989}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RightWall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -732,7 +732,7 @@ GameObject:
   - component: {fileID: 1241835292}
   - component: {fileID: 1241835293}
   - component: {fileID: 1241835294}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopWall
   m_TagString: Wall
   m_Icon: {fileID: 0}

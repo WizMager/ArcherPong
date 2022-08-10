@@ -17,11 +17,10 @@ public class Arrow : MonoBehaviour
         {
                 if (col.CompareTag("Wall"))
                 {
-                        var reflectionVector = Vector2.Reflect(transform.forward, _normal);
-                        reflectionVector.Normalize();
-                        var angleAxisZ = Mathf.Atan2(reflectionVector.y, reflectionVector.x) * Mathf.Rad2Deg - 90f;
-                        var angle = Vector2.Angle(-_ray.direction, _normal);
+                        var reflectionVector = Vector2.Reflect(_ray.direction.normalized, _normal.normalized);
+                        var angle = Vector2.Angle(_ray.direction, _normal);
                         transform.RotateAround(transform.position, transform.forward, angle);
+                        Debug.DrawLine(transform.position, reflectionVector, Color.red, 1000f);
                         CalculateReflection();
                 } 
         }
@@ -35,9 +34,9 @@ public class Arrow : MonoBehaviour
         {
                 _ray = new Ray2D(transform.position, transform.up);
                 var raycastHit = new RaycastHit2D[1];
-                if (Physics2D.RaycastNonAlloc(_ray.origin, _ray.direction, raycastHit) > 0)
+                if (Physics2D.RaycastNonAlloc(_ray.origin, _ray.direction, raycastHit, 10f, LayerMask.GetMask("Reflect")) > 0)
                 { 
                         _normal = raycastHit[0].normal;    
-                }   
+                }
         }
 }
