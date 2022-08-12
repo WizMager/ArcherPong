@@ -5,6 +5,7 @@ public class PlayerShoot : MonoBehaviour
 {
     [SerializeField] private GameObject arrow;
     [SerializeField] private Transform shootPosition;
+    [SerializeField] private GameObject bowArrow;
     private PlayerInput _playerInput;
     private bool _hasArrow = true;
 
@@ -25,11 +26,13 @@ public class PlayerShoot : MonoBehaviour
         if (!_hasArrow) return;
         Instantiate(arrow, shootPosition.position, shootPosition.rotation);
         _hasArrow = false;
+        bowArrow.SetActive(false);
     }
 
     public void CatchArrow()
     {
         _hasArrow = true;
+        bowArrow.SetActive(true);
     }
 
     private void OnDisable()
