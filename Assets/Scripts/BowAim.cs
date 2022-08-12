@@ -1,11 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class BowAim : MonoBehaviour
 {
        [SerializeField] private Camera mainCamera;
-       [SerializeField] private float rotationSpeed;
        private PlayerInput _playerInput;
 
        private void Awake()
