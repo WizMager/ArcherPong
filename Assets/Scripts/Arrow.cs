@@ -20,6 +20,7 @@ public class Arrow : MonoBehaviour
                 {
                         var direction = Vector2.Reflect(_currentVelocity.normalized, col.contacts[0].normal);
                         _rigidbody.velocity = direction * moveSpeed;
+                        transform.rotation = Quaternion.FromToRotation(transform.up, direction) * transform.rotation;
                 }
 
                 if (CompareTag("Player"))
