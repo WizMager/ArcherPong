@@ -1,49 +1,37 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
         [SerializeField] private float moveSpeed = 3f;
-        private Ray2D _ray;
-        private Vector3 _normal;
+        private Rigidbody2D _rigidbody;
+        private Vector2 _currentVelocity;
 
         private void Start()
         {
-                //Destroy(gameObject, 3f);
-                CalculateReflection();
+                _rigidbody = GetComponent<Rigidbody2D>();
+                _rigidbody.AddForce(transform.up * moveSpeed, ForceMode2D.Impulse);
         }
 
-        private void OnTriggerEnter2D(Collider2D col)
+        private void OnCollisionEnter2D(Collision2D col)
         {
-                if (col.CompareTag("Wall"))
+                tag = col.transform.tag;
+
+                if (CompareTag("Wall"))
                 {
-                        var reflectionVector = Vector2.Reflect(_ray.direction.normalized, _normal.normalized);
-                        var angle = Vector2.Angle(_ray.direction, _normal);
-                        transform.RotateAround(transform.position, transform.forward, angle);
-                        Debug.DrawLine(transform.position, reflectionVector, Color.red, 1000f);
-                        CalculateReflection();
+                        var direction = Vector2.Reflect(_currentVelocity.normalized, col.contacts[0].normal);
+                        _rigidbody.velocity = direction * moveSpeed;
                 }
 
-                if (col.CompareTag("Player"))
+                if (CompareTag("Player"))
                 {
-                        var playerShoot = col.GetComponent<PlayerShoot>();
+                        var playerShoot = col.transform.GetComponent<PlayerShoot>();
                         playerShoot.CatchArrow();
                         Destroy(gameObject);
                 }
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-                transform.Translate(transform.up * moveSpeed * Time.deltaTime);
-        }
-
-        private void CalculateReflection()
-        {
-                _ray = new Ray2D(transform.position, transform.up);
-                var raycastHit = new RaycastHit2D[1];
-                if (Physics2D.RaycastNonAlloc(_ray.origin, _ray.direction, raycastHit, 10f, LayerMask.GetMask("Reflect")) > 0)
-                { 
-                        _normal = raycastHit[0].normal;    
-                }
+                _currentVelocity = _rigidbody.velocity;   
         }
 }

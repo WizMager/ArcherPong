@@ -218,7 +218,6 @@ GameObject:
   - component: {fileID: 768793730}
   - component: {fileID: 768793731}
   - component: {fileID: 768793732}
-  - component: {fileID: 768793733}
   m_Layer: 6
   m_Name: LeftWall
   m_TagString: Wall
@@ -319,27 +318,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &768793733
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 768793729}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!1 &959173448
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,7 +330,6 @@ GameObject:
   - component: {fileID: 959173449}
   - component: {fileID: 959173451}
   - component: {fileID: 959173452}
-  - component: {fileID: 959173454}
   - component: {fileID: 959173453}
   m_Layer: 0
   m_Name: Player
@@ -472,27 +449,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.0020099285, y: -0.000003010514}
   m_Size: {x: 1.0040251, y: 0.9864276}
   m_Direction: 1
---- !u!50 &959173454
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 959173448}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!1 &1016183606
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +460,6 @@ GameObject:
   - component: {fileID: 1016183607}
   - component: {fileID: 1016183608}
   - component: {fileID: 1016183609}
-  - component: {fileID: 1016183610}
   m_Layer: 6
   m_Name: DownWall
   m_TagString: Wall
@@ -605,27 +560,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &1016183610
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016183606}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!1 &1184226985
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,7 +571,6 @@ GameObject:
   - component: {fileID: 1184226986}
   - component: {fileID: 1184226987}
   - component: {fileID: 1184226988}
-  - component: {fileID: 1184226989}
   m_Layer: 6
   m_Name: RightWall
   m_TagString: Wall
@@ -738,27 +671,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &1184226989
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184226985}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!1 &1241835290
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,7 +682,6 @@ GameObject:
   - component: {fileID: 1241835291}
   - component: {fileID: 1241835292}
   - component: {fileID: 1241835293}
-  - component: {fileID: 1241835294}
   m_Layer: 6
   m_Name: TopWall
   m_TagString: Wall
@@ -871,27 +782,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &1241835294
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1241835290}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
 --- !u!1 &1568249980
 GameObject:
   m_ObjectHideFlags: 0
