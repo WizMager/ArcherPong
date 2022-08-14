@@ -56,5 +56,10 @@ public class PlayerMove : MonoBehaviour
         {
             transform.Translate(col.contacts[0].normal * moveSpeed * Time.deltaTime);
         }
+
+        if (colliderTag == "PlayerWallLimiter")
+        {
+            transform.Translate(col.contacts[0].normal * moveSpeed * Time.deltaTime);
+        }
     }
 }
