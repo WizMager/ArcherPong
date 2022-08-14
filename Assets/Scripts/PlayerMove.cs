@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -44,6 +45,16 @@ public class PlayerMove : MonoBehaviour
         else
         {
             transform.Translate(_playerInput.PlayerTwo.Move.ReadValue<Vector2>() * moveSpeed * Time.deltaTime);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        var colliderTag = col.gameObject.tag;
+        
+        if (colliderTag == "Wall")
+        {
+            transform.Translate(col.contacts[0].normal * moveSpeed * Time.deltaTime);
         }
     }
 }
