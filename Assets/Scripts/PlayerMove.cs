@@ -3,17 +3,18 @@
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private bool isFirstPlayer;
+    private bool _isFirstPlayer;
     private PlayerInput _playerInput;
 
     private void Awake()
     {
         _playerInput = new PlayerInput();
+        _isFirstPlayer = GetComponent<PlayerView>().IsFirstPlayer;
     }
 
     private void OnEnable()
     {
-        if (isFirstPlayer)
+        if (_isFirstPlayer)
         {
             _playerInput.Player.Move.Enable(); 
         }
@@ -25,7 +26,7 @@ public class PlayerMove : MonoBehaviour
 
     private void OnDisable()
     {
-        if (isFirstPlayer)
+        if (_isFirstPlayer)
         {
             _playerInput.Player.Move.Disable(); 
         }
@@ -37,7 +38,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        if (isFirstPlayer)
+        if (_isFirstPlayer)
         {
             transform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * moveSpeed * Time.deltaTime);
         }
