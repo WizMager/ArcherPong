@@ -20,6 +20,7 @@ public class PlayerShoot : MonoBehaviour
         _isFirstPlayer = GetComponent<PlayerView>().IsFirstPlayer;
         
         arrow.OnCatchArrow += ArrowCaught;
+        arrow.OnMissArrow += MissedArrow;
         
         if (_isFirstPlayer)
         {
@@ -57,6 +58,22 @@ public class PlayerShoot : MonoBehaviour
             _hasArrow = true;
             bowArrow.SetActive(true);
         }
+    }
+
+    private void MissedArrow(bool isFirstPlayer)
+    {
+        if (isFirstPlayer == _isFirstPlayer)
+        {
+            Debug.Log("SecondPlayerTurn");
+        }
+        else
+        {
+            Debug.Log("FirstPlayerTurn");
+            
+        }
+        arrow.gameObject.SetActive(false);
+        _hasArrow = true;
+        bowArrow.SetActive(true);
     }
 
     private void OnDisable()

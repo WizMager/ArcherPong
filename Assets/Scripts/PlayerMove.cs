@@ -3,13 +3,23 @@
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private Arrow arrow;
     private bool _isFirstPlayer;
     private PlayerInput _playerInput;
+    private Vector3 _startPosition;
+    private Quaternion _startRotation;
 
     private void Awake()
     {
         _playerInput = new PlayerInput();
         _isFirstPlayer = GetComponent<PlayerView>().IsFirstPlayer;
+    }
+
+    private void Start()
+    {
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
+        arrow.OnMissArrow += MissedArrow;
     }
 
     private void OnEnable()
@@ -61,5 +71,11 @@ public class PlayerMove : MonoBehaviour
         {
             transform.Translate(col.contacts[0].normal * moveSpeed * Time.deltaTime);
         }
+    }
+    
+    private void MissedArrow(bool isFirstPlayer)
+    {
+        transform.position = _startPosition;
+        transform.rotation = _startRotation;
     }
 }

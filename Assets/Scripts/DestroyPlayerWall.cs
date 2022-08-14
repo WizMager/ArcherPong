@@ -3,7 +3,6 @@
 public class DestroyPlayerWall : MonoBehaviour
 {
      [SerializeField] private bool isFirstPlayer;
-     [SerializeField] private Material material;
-     
-     
+
+     public bool IsFirstPlayer => isFirstPlayer;
 }

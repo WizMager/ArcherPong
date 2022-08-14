@@ -4,6 +4,7 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
         public Action<bool> OnCatchArrow;
+        public Action<bool> OnMissArrow;
         [SerializeField] private float moveSpeed = 3f;
         [SerializeField] private Rigidbody2D arrowRigidbody;
         private Vector2 _currentVelocity;
@@ -25,9 +26,18 @@ public class Arrow : MonoBehaviour
 
                 if (CompareTag("Wall"))
                 {
-                        var direction = Vector2.Reflect(_currentVelocity.normalized, col.contacts[0].normal);
-                        arrowRigidbody.velocity = direction * moveSpeed;
-                        transform.rotation = Quaternion.FromToRotation(transform.up, direction) * transform.rotation;
+                        var destroyPlayerWall = col.gameObject.GetComponent<DestroyPlayerWall>();
+                        if (destroyPlayerWall)
+                        {
+                                OnMissArrow?.Invoke(destroyPlayerWall.IsFirstPlayer);
+                        }
+                        else
+                        {
+                                var direction = Vector2.Reflect(_currentVelocity.normalized, col.contacts[0].normal);
+                                arrowRigidbody.velocity = direction * moveSpeed;
+                                transform.rotation = Quaternion.FromToRotation(transform.up, direction) *
+                                                     transform.rotation;
+                        }
                 }
 
                 if (CompareTag("Player"))
