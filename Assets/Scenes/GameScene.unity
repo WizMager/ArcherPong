@@ -1789,7 +1789,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959173448}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.19, y: -9.25, z: 0}
+  m_LocalPosition: {x: -0.19, y: -9.03, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1810,7 +1810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  isPlayer1: 1
+  isFirstPlayer: 1
 --- !u!114 &959173452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1854,9 +1854,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000000
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -2012,7 +2012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  isPlayer1: 0
+  isFirstPlayer: 0
 --- !u!212 &1182651344
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2118,9 +2118,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000000
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -2137,7 +2137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1192121749}
   - component: {fileID: 1192121750}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player2MoveUpLimiter
   m_TagString: PlayerWallLimiter
   m_Icon: {fileID: 0}
@@ -2480,7 +2480,7 @@ SpriteShapeRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -2538,7 +2538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1876034762}
   - component: {fileID: 1876034763}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player1MoveUpLimiter
   m_TagString: PlayerWallLimiter
   m_Icon: {fileID: 0}

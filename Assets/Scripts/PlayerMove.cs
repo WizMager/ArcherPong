@@ -1,12 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private bool isPlayer1;
+    [SerializeField] private bool isFirstPlayer;
     private PlayerInput _playerInput;
-    
+
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -14,7 +13,7 @@ public class PlayerMove : MonoBehaviour
 
     private void OnEnable()
     {
-        if (isPlayer1)
+        if (isFirstPlayer)
         {
             _playerInput.Player.Move.Enable(); 
         }
@@ -26,7 +25,7 @@ public class PlayerMove : MonoBehaviour
 
     private void OnDisable()
     {
-        if (isPlayer1)
+        if (isFirstPlayer)
         {
             _playerInput.Player.Move.Disable(); 
         }
@@ -38,7 +37,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayer1)
+        if (isFirstPlayer)
         {
             transform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * moveSpeed * Time.deltaTime);
         }
