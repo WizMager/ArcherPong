@@ -41,7 +41,8 @@ namespace Controllers
         
         private void ArrowTaken(bool isFirstPlayer)
         {
-            if (_isFirstPlayer == isFirstPlayer) return;
+            //TODO: delete this comment when will be added bot or/and network with second player
+            //if (_isFirstPlayer == isFirstPlayer) return;
             _hasArrow = true;
             _bowArrow.SetActive(true);
         }
