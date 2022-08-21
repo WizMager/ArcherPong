@@ -17,14 +17,26 @@ public class GameController : MonoBehaviour
         _controllers.Start();
     }
 
+    private void OnEnable()
+    {
+        _controllers.OnEnable();
+    }
+
     private void Update()
     {
-        _controllers.Execute();
+        var deltaTime = Time.deltaTime;
+        _controllers.Execute(deltaTime);
     }
 
     private void LateUpdate()
     {
-        _controllers.LateExecute();
+        var deltaTime = Time.deltaTime;
+        _controllers.LateExecute(deltaTime);
+    }
+
+    private void OnDisable()
+    {
+        _controllers.OnDisable();
     }
 
     private void OnDestroy()
