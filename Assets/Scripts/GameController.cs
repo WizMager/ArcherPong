@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Views;
 
 public class GameController : MonoBehaviour
 {
@@ -7,8 +8,9 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        _controllers = new Controllers.Controllers();
-        new GameInitialization(_controllers, data);
+        var players = FindObjectsOfType<PlayerView>();
+        //_controllers = new Controllers.Controllers();
+        //new GameInitialization(_controllers, data, players);
         _controllers.Awake();
     }
 

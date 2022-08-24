@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Utils
 {
        public class BowAim : MonoBehaviour
        {
+              [SerializeField] private PhotonView photonView;
               private Camera _mainCamera;
               private PlayerInput _playerInput;
 
@@ -12,6 +14,7 @@ namespace Utils
               {
                      _mainCamera = Camera.main;
                      _playerInput = new PlayerInput();
+                     //_photonView = GetComponentInParent<PhotonView>();
               }
 
               private void OnEnable()
@@ -23,6 +26,7 @@ namespace Utils
 
               private void Aiming(InputAction.CallbackContext aiming)
               {
+                     if (!photonView.IsMine) return;
                      var mousePosition = aiming.ReadValue<Vector2>();
                      var worldMousePosition = _mainCamera.ScreenToWorldPoint(mousePosition);
                      var mouseDirection = worldMousePosition - transform.position;
