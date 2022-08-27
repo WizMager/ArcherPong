@@ -250,6 +250,7 @@ MonoBehaviour:
   playerMoveSpeed: 5
   bow: {fileID: 7595877042427305252}
   bowArrow: {fileID: 7595877042534779316}
+  shootPosition: {fileID: 7595877042500595395}
 --- !u!114 &3412043203624383086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,7 +554,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7595877042500595392}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0014000013, y: 0.13480003, z: 0}
+  m_LocalPosition: {x: 0.001, y: 0.178, z: 0}
   m_LocalScale: {x: 0.05, y: 0.049999997, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

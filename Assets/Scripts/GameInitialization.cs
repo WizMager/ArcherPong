@@ -21,7 +21,7 @@ public class GameInitialization
                 
                 var playerMoveController = new PlayerMoveController(players[0].gameObject, data.GetPlayerData.playerMoveSpeed, players[0].GetComponent<PhotonView>());
 
-                var arrowController = new ArrowController(playerShootControllers, arrow, data.GetArrowData.arrowSpeed);
+                var arrowController = new ArrowControllerOld(playerShootControllers, arrow, data.GetArrowData.arrowSpeed);
                 playerMoveController.GetArrowController(arrowController);
                 controllers.Add(arrowController);
                 controllers.Add(playerMoveController);

@@ -6,7 +6,7 @@ using Views;
 
 namespace Controllers
 {
-    public class ArrowController : IStart, ILateExecute, ICleanup
+    public class ArrowControllerOld : IStart, ILateExecute, ICleanup
     {
         public Action<bool> OnArrowCatch;
         public Action<bool> OnArrowMiss;
@@ -18,7 +18,7 @@ namespace Controllers
         private Vector2 _currentVelocity;
         private float _arrowMoveSpeed;
         
-        public ArrowController(List<PlayerShootController> playerShootControllers, GameObject arrow, float arrowMoveSpeed)
+        public ArrowControllerOld(List<PlayerShootController> playerShootControllers, GameObject arrow, float arrowMoveSpeed)
         {
             _playerShootController = playerShootControllers;
             _arrowView = arrow.GetComponent<ArrowView>();

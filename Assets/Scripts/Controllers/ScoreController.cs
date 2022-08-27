@@ -6,17 +6,17 @@ namespace Controllers
     public class ScoreController : IStart, ICleanup
     {
         private ScoreModel _scoreModel;
-        private ArrowController _arrowController;
+        private ArrowControllerOld _arrowControllerOld;
 
-        public ScoreController(ScoreModel scoreModel, ArrowController arrowController)
+        public ScoreController(ScoreModel scoreModel, ArrowControllerOld arrowControllerOld)
         {
             _scoreModel = scoreModel;
-            _arrowController = arrowController;
+            _arrowControllerOld = arrowControllerOld;
         }
         
         public void Start()
         {
-            _arrowController.OnArrowMiss += ArrowMissed;
+            _arrowControllerOld.OnArrowMiss += ArrowMissed;
         }
 
         private void ArrowMissed(bool isFirstPlayer)
@@ -26,7 +26,7 @@ namespace Controllers
 
         public void Cleanup()
         {
-            _arrowController.OnArrowMiss -= ArrowMissed;
+            _arrowControllerOld.OnArrowMiss -= ArrowMissed;
         }
     }
 }

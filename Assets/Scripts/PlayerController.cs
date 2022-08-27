@@ -1,13 +1,16 @@
-﻿using Photon.Pun;
+﻿using System;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Views;
 
 public class PlayerController : MonoBehaviour
 {
+    public Action<Vector2, Quaternion> OnShoot;
     [SerializeField] private float playerMoveSpeed;
     [SerializeField] private Transform bow;
     [SerializeField] private SpriteRenderer bowArrow;
+    [SerializeField] private Transform shootPosition;
     private Camera _mainCamera;
     private PlayerInput _playerInput;
     private PhotonView _photonView;
@@ -24,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        FindObjectOfType<ArrowController>().TakePlayerController(this);
         if (_photonView.IsMine)
         {
             TakeArrow(PhotonNetwork.IsMasterClient);
@@ -51,7 +55,18 @@ public class PlayerController : MonoBehaviour
     {
         _playerInput.Player.Move.Enable();
         _playerInput.Player.Aiming.Enable();
+        _playerInput.Player.Shoot.Enable();
         _playerInput.Player.Aiming.performed += Aiming;
+        _playerInput.Player.Shoot.performed += Shoot;
+    }
+
+    private void Shoot(InputAction.CallbackContext obj)
+    {
+        if (!_photonView.IsMine) return;
+        
+        if (!_hasArrow) return;
+        OnShoot?.Invoke(shootPosition.position, shootPosition.rotation);
+        TakeArrow(false);
     }
 
     private void Aiming(InputAction.CallbackContext aiming)
@@ -75,11 +90,13 @@ public class PlayerController : MonoBehaviour
     {
         _playerInput.Player.Move.Disable();
         _playerInput.Player.Aiming.Disable();
+        _playerInput.Player.Shoot.Disable();
     }
 
     private void OnDestroy()
     {
         _playerView.OnWallEnter -= WallEntered;
         _playerInput.Player.Aiming.performed -= Aiming;
+        _playerInput.Player.Shoot.performed -= Shoot;
     }
 }

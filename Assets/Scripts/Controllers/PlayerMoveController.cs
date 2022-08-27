@@ -7,7 +7,7 @@ namespace Controllers
 {
     public class PlayerMoveController : IStart,IEnable, IDisable, ICleanup, IExecute, IAwake
     {
-        private ArrowController _arrowController;
+        private ArrowControllerOld _arrowControllerOld;
         private readonly Transform _playerTransform;
         private readonly float _playerMoveSpeed;
         private readonly PhotonView _photonView;
@@ -26,9 +26,9 @@ namespace Controllers
             _startRotation = _playerTransform.rotation;
         }
 
-        public void GetArrowController(ArrowController arrowController)
+        public void GetArrowController(ArrowControllerOld arrowControllerOld)
         {
-            _arrowController = arrowController;
+            _arrowControllerOld = arrowControllerOld;
         }
         
         public void Awake()
@@ -38,7 +38,7 @@ namespace Controllers
         
         public void Start()
         {
-            _arrowController.OnArrowMiss += ArrowMissed;
+            _arrowControllerOld.OnArrowMiss += ArrowMissed;
             _playerView.OnWallEnter += WallEntered;
         }
 
@@ -54,7 +54,7 @@ namespace Controllers
 
         public void Cleanup()
         {
-            _arrowController.OnArrowMiss -= ArrowMissed;
+            _arrowControllerOld.OnArrowMiss -= ArrowMissed;
         }
 
         public void OnEnable()

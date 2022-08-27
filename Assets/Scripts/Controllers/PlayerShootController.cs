@@ -9,7 +9,7 @@ namespace Controllers
     public class PlayerShootController : IAwake, IStart, IEnable, IDisable, ICleanup
     {
         public Action<Vector2, Quaternion> OnShoot;
-        private ArrowController _arrowController;
+        private ArrowControllerOld _arrowControllerOld;
         private GameObject _arrow;
         private Transform _shootPosition;
         private GameObject _bowArrow;
@@ -23,9 +23,9 @@ namespace Controllers
             _bowArrow = player.GetComponentInChildren<BowArrow>().gameObject;
         }
 
-        public void GetArrowController(ArrowController arrowController)
+        public void GetArrowController(ArrowControllerOld arrowControllerOld)
         {
-            _arrowController = arrowController;
+            _arrowControllerOld = arrowControllerOld;
         }
         
         public void Awake()
@@ -35,8 +35,8 @@ namespace Controllers
 
         public void Start()
         {
-            _arrowController.OnArrowCatch += ArrowTaken;
-            _arrowController.OnArrowMiss += ArrowTaken;
+            _arrowControllerOld.OnArrowCatch += ArrowTaken;
+            _arrowControllerOld.OnArrowMiss += ArrowTaken;
         }
         
         private void ArrowTaken(bool isFirstPlayer)
