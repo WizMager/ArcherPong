@@ -21,21 +21,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
      private void CreatePlayer()
      {
-          var isFirstPlayer = FindObjectOfType<PlayerController>() == null;
-          Debug.Log(FindObjectsOfType<PlayerController>().Length);
-          var player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), Vector3.zero, Quaternion.identity);
-          player.GetComponent<PlayerController>().TakeArrow(isFirstPlayer);
-          //Debug.Log(FindObjectOfType<PlayerController>());
-          //player.GetComponent<PlayerController>().TakeArrow(!FindObjectOfType<PlayerController>());
-          // if (isFirstPlayer)
-          // {
-          //      player.GetComponent<PlayerController>().TakeArrow(true);
-          //      Debug.Log("true");
-          // }
-          // else
-          // {
-          //      player.GetComponent<PlayerController>().TakeArrow(false);
-          //      Debug.Log("false");
-          // }
+          PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), Vector3.zero, Quaternion.identity);
      }
 }

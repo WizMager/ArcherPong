@@ -24,6 +24,15 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        if (_photonView.IsMine)
+        {
+            TakeArrow(PhotonNetwork.IsMasterClient);
+        }
+        else
+        {
+            TakeArrow(!PhotonNetwork.IsMasterClient);
+        }
+        
         _playerView.OnWallEnter += WallEntered;
     }
 
