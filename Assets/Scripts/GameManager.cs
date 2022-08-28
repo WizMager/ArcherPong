@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System.IO;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,9 +8,22 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviourPunCallbacks
 {
      [SerializeField] private Button leave;
+     [SerializeField] private Transform firstPlayerSpawn;
+     [SerializeField] private Transform secondPlayerSpawn;
 
      private void Start()
      {
+          if (PhotonNetwork.IsMasterClient)
+          {
+               PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FirstPlayer"), firstPlayerSpawn.position,
+                    firstPlayerSpawn.rotation); 
+          }
+          else
+          {
+               PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SecondPlayer"), secondPlayerSpawn.position,
+                    secondPlayerSpawn.rotation); 
+          }
+
           leave.onClick.AddListener(LeaveRoom);
      }
 
@@ -23,13 +37,8 @@ public class GameManager : MonoBehaviourPunCallbacks
           SceneManager.LoadScene(0);
      }
 
-     public override void OnPlayerEnteredRoom(Player newPlayer)
-     {
-          Debug.Log($"Player{newPlayer} join to room");
-     }
-
      public override void OnPlayerLeftRoom(Player otherPlayer)
      {
-          Debug.Log($"Player{otherPlayer} left room");
+          LeaveRoom();
      }
 }

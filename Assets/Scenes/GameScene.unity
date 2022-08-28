@@ -489,6 +489,51 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &410615284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 410615286}
+  - component: {fileID: 410615285}
+  m_Layer: 0
+  m_Name: ArrowController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &410615285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410615284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df2bd5d3a11486389f368747cdb67c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrowMoveSpeed: 5
+--- !u!4 &410615286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410615284}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 177.71684, y: 331.83893, z: 0.7700788}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &486598501
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,6 +2092,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leave: {fileID: 1892724902}
+  firstPlayerSpawn: {fileID: 695895039232687235, guid: c482a778fb6f0ef428e64614e58f5ea7, type: 3}
+  secondPlayerSpawn: {fileID: 3825565726648376696, guid: 88c0530c995b4f14aa9fd4c26ec55f99, type: 3}
 --- !u!4 &1619954150
 Transform:
   m_ObjectHideFlags: 0

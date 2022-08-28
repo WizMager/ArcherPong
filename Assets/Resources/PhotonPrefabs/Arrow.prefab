@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 882840714313902257}
   - component: {fileID: 241696361101511179}
   - component: {fileID: 8856546765243915325}
-  - component: {fileID: 6051918497289827312}
   - component: {fileID: -5998693068443762478}
   - component: {fileID: -8878734871322280124}
+  - component: {fileID: 4325731189910597058}
   m_Layer: 6
-  m_Name: ArrowController
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1864050637039755241}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.56, y: -7.02, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -101,7 +101,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -126,19 +126,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.05, y: 0.19}
   m_Direction: 0
---- !u!114 &6051918497289827312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1864050637039755241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8df2bd5d3a11486389f368747cdb67c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arrowMoveSpeed: 5
 --- !u!114 &-5998693068443762478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,4 +164,16 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_UseLocal: 0
+--- !u!114 &4325731189910597058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864050637039755241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241f6b410e542559355d8c46524de03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

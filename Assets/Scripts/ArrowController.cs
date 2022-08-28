@@ -1,96 +1,87 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
+using Views;
 
 public class ArrowController : MonoBehaviour
 {
         [SerializeField] private float arrowMoveSpeed;
+        private GameObject _arrow;
+        private ArrowView _arrowView;
         private Rigidbody2D _rigidbody;
         private Transform _transform;
-        private SpriteRenderer _spriteRenderer;
         private Vector2 _currentVelocity;
-        private List<PlayerController> _playerControllers = new();
+        private readonly List<PlayerController> _playerControllers = new();
 
         private void Start()
         {
-                _rigidbody = GetComponent<Rigidbody2D>();
-                _transform = GetComponent<Transform>();
-                _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (!PhotonNetwork.IsMasterClient) return;
+            _arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), Vector3.zero, Quaternion.identity);
+            _arrowView = _arrow.GetComponent<ArrowView>();
+            _rigidbody = _arrow.GetComponent<Rigidbody2D>();
+            _transform = _arrow.GetComponent<Transform>();
+            _arrowView.OnReflect += ArrowReflected;
+            _arrowView.OnCatch += ArrowCaught;
+            ArrowDisable();
         }
 
-        public void TakePlayerController(PlayerController playerController)
+        private void ArrowCaught(bool isFirstPlayer)
+        {
+            //if (!PhotonNetwork.IsMasterClient) return;
+            Debug.Log(isFirstPlayer);
+            if (isFirstPlayer)
+            {
+               _playerControllers[0].TakeArrow(true);
+            }
+            else
+            {
+                _playerControllers[1].TakeArrow(true);
+            }
+            ArrowDisable();
+        }
+
+        private void ArrowReflected(Vector2 normal)
+        {
+            if (!PhotonNetwork.IsMasterClient) return;
+            var direction = Vector2.Reflect(_currentVelocity.normalized, normal);
+            _rigidbody.velocity = direction * arrowMoveSpeed;
+            _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) * _transform.rotation;
+        }
+
+        public void AddPlayerController(PlayerController playerController)
         {
             _playerControllers.Add(playerController);
-            if (_playerControllers.Count != 2) return;
-            foreach (var controller in _playerControllers)
-            {
-                controller.OnShoot += Shooted;
-            }
+            playerController.OnShoot += Shooted;
         }
-        
+
         private void Shooted(Vector2 arrowPosition, Quaternion arrowRotation)
         {
             _transform.SetPositionAndRotation(arrowPosition,arrowRotation);
-            ArrowEnable();
-        }
-        
-        private void OnCollisionEnter2D(Collision2D col)
-        {
-            var objectTag = col.gameObject.tag;
-
-            switch (objectTag)
+            foreach (var controller in _playerControllers)
             {
-                case "Wall":
-                    var destroyPlayerWall = col.gameObject.GetComponent<DestroyPlayerWall>();
-                    if (destroyPlayerWall)
-                    {
-                        //OnMissArrow?.Invoke(destroyPlayerWall.IsFirstPlayer);
-                        if (PhotonNetwork.IsMasterClient)
-                        {
-                            var direction = Vector2.Reflect(_currentVelocity.normalized, col.contacts[0].normal);
-                            _rigidbody.velocity = direction * arrowMoveSpeed;
-                            _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) *
-                                                  _transform.rotation;
-                        }
-                    }
-                    else
-                    {
-                        if (PhotonNetwork.IsMasterClient)
-                        {
-                            var direction = Vector2.Reflect(_currentVelocity.normalized, col.contacts[0].normal);
-                            _rigidbody.velocity = direction * arrowMoveSpeed;
-                            _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) *
-                                                  _transform.rotation;
-                        }
-                    }
-                    break;
-                case "Player":
-                    col.gameObject.GetComponent<PlayerController>().TakeArrow(true);
-                    ArrowDisable();
-                    break;
+                controller.TakeArrow(false);
             }
+            ArrowEnable();
         }
 
         private void ArrowEnable()
         {
-            _spriteRenderer.enabled = true;
-            _rigidbody.AddForce(_transform.up * arrowMoveSpeed, ForceMode2D.Impulse); 
+            _arrow.SetActive(true);
+            _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse); 
         }
 
         private void ArrowDisable()
         {
-            _spriteRenderer.enabled = false;
             _rigidbody.velocity = Vector2.zero;
             _rigidbody.angularVelocity = 0;
+            _arrow.SetActive(false);
         }
 
         private void FixedUpdate()
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                _currentVelocity = _rigidbody.velocity;
-            }
-            
+            if (!PhotonNetwork.IsMasterClient) return;
+            _currentVelocity = _rigidbody.velocity;
         }
 
         private void OnDestroy()
@@ -99,5 +90,6 @@ public class ArrowController : MonoBehaviour
             {
                 playerController.OnShoot -= Shooted;
             }
+            Destroy(_arrow);
         }
 }

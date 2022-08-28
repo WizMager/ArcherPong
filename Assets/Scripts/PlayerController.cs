@@ -27,16 +27,25 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        FindObjectOfType<ArrowController>().TakePlayerController(this);
-        if (_photonView.IsMine)
+        FindObjectOfType<ArrowController>().AddPlayerController(this);
+        //_playerView.IsFirstPlayer = PhotonNetwork.IsMasterClient && _photonView.IsMine;
+        if (PhotonNetwork.IsMasterClient)
         {
-            TakeArrow(PhotonNetwork.IsMasterClient);
+            _playerView.IsFirstPlayer = _photonView.IsMine;
         }
         else
         {
-            TakeArrow(!PhotonNetwork.IsMasterClient);
+            _playerView.IsFirstPlayer = !_photonView.IsMine;
         }
-        
+        Debug.Log(_playerView.IsFirstPlayer);
+        if (_photonView.IsMine)
+        {
+            TakeArrow(_playerView.IsFirstPlayer);
+        }
+        else
+        {
+            TakeArrow(!_playerView.IsFirstPlayer);
+        }
         _playerView.OnWallEnter += WallEntered;
     }
 
@@ -62,8 +71,8 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot(InputAction.CallbackContext obj)
     {
+        //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
-        
         if (!_hasArrow) return;
         OnShoot?.Invoke(shootPosition.position, shootPosition.rotation);
         TakeArrow(false);
@@ -82,6 +91,7 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
+        //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
         transform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
     }

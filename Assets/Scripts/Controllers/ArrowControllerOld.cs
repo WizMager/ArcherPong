@@ -33,8 +33,8 @@ namespace Controllers
             _arrowRigidbody = _arrowView.GetComponent<Rigidbody2D>();
             _arrowTransform = _arrowView.GetComponent<Transform>();
             _arrowSpriteRenderer = _arrowView.GetComponent<SpriteRenderer>();
-            _arrowView.OnCatchArrow += ArrowCaught;
-            _arrowView.OnMissArrow += ArrowMissed;
+            _arrowView.OnCatch += ArrowCaught;
+            _arrowView.OnMiss += ArrowMissed;
             _arrowView.OnReflect += ArrowReflected;
             foreach (var playerShootController in _playerShootController)
             {
@@ -90,8 +90,8 @@ namespace Controllers
 
         public void Cleanup()
         {
-            _arrowView.OnCatchArrow -= ArrowCaught;
-            _arrowView.OnMissArrow -= ArrowMissed;
+            _arrowView.OnCatch -= ArrowCaught;
+            _arrowView.OnMiss -= ArrowMissed;
             _arrowView.OnReflect -= ArrowReflected;
             foreach (var playerShootController in _playerShootController)
             {
