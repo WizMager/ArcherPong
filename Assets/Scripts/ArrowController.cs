@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Photon.Pun;
@@ -20,7 +19,7 @@ public class ArrowController : MonoBehaviour
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                _arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), Vector3.zero, Quaternion.identity);
+                _arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), new Vector3(10, 10,0), Quaternion.identity);
                 _arrowView = _arrow.GetComponent<ArrowView>();
                 _rigidbody = _arrow.GetComponent<Rigidbody2D>();
                 _transform = _arrow.GetComponent<Transform>();
