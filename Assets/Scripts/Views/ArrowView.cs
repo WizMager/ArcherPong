@@ -7,7 +7,7 @@ namespace Views
         public Action<bool> OnMiss;
         public Action<Vector2> OnReflect;
         public Action<bool> OnCatch;
-        
+
         private void OnCollisionEnter2D(Collision2D col)
         {
             tag = col.transform.tag;

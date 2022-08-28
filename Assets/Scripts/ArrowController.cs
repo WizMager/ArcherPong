@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Photon.Pun;
 using UnityEngine;
 using Views;
@@ -12,24 +14,27 @@ public class ArrowController : MonoBehaviour
         private Rigidbody2D _rigidbody;
         private Transform _transform;
         private Vector2 _currentVelocity;
-        private readonly List<PlayerController> _playerControllers = new();
+        private List<PlayerController> _playerControllers = new();
 
         private void Start()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
-            _arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), Vector3.zero, Quaternion.identity);
-            _arrowView = _arrow.GetComponent<ArrowView>();
-            _rigidbody = _arrow.GetComponent<Rigidbody2D>();
-            _transform = _arrow.GetComponent<Transform>();
-            _arrowView.OnReflect += ArrowReflected;
-            _arrowView.OnCatch += ArrowCaught;
-            ArrowDisable();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), Vector3.zero, Quaternion.identity);
+                _arrowView = _arrow.GetComponent<ArrowView>();
+                _rigidbody = _arrow.GetComponent<Rigidbody2D>();
+                _transform = _arrow.GetComponent<Transform>();
+                _arrowView.OnReflect += ArrowReflected;
+                _arrowView.OnCatch += ArrowCaught;
+                _arrow.GetComponent<SpriteRenderer>().enabled = true;
+                ArrowDisable();
+            }
         }
 
         private void ArrowCaught(bool isFirstPlayer)
         {
-            //if (!PhotonNetwork.IsMasterClient) return;
-            Debug.Log(isFirstPlayer);
+            ArrowDisable();
+            if (!PhotonNetwork.IsMasterClient) return;
             if (isFirstPlayer)
             {
                _playerControllers[0].TakeArrow(true);
@@ -38,7 +43,6 @@ public class ArrowController : MonoBehaviour
             {
                 _playerControllers[1].TakeArrow(true);
             }
-            ArrowDisable();
         }
 
         private void ArrowReflected(Vector2 normal)
@@ -53,6 +57,9 @@ public class ArrowController : MonoBehaviour
         {
             _playerControllers.Add(playerController);
             playerController.OnShoot += Shooted;
+            
+            if (_playerControllers.Count != 2) return;
+            _playerControllers = _playerControllers.OrderBy(p => p.GetComponent<PhotonView>().Owner.ActorNumber).ToList();
         }
 
         private void Shooted(Vector2 arrowPosition, Quaternion arrowRotation)
@@ -68,13 +75,17 @@ public class ArrowController : MonoBehaviour
         private void ArrowEnable()
         {
             _arrow.SetActive(true);
+            if (!PhotonNetwork.IsMasterClient) return;
             _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse); 
         }
 
         private void ArrowDisable()
         {
-            _rigidbody.velocity = Vector2.zero;
-            _rigidbody.angularVelocity = 0;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _rigidbody.velocity = Vector2.zero;
+                _rigidbody.angularVelocity = 0;
+            }
             _arrow.SetActive(false);
         }
 

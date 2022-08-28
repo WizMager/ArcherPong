@@ -15,15 +15,12 @@ public class GameManager : MonoBehaviourPunCallbacks
      {
           if (PhotonNetwork.IsMasterClient)
           {
-               PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FirstPlayer"), firstPlayerSpawn.position,
-                    firstPlayerSpawn.rotation); 
+               PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FirstPlayer"), firstPlayerSpawn.position, firstPlayerSpawn.rotation);
           }
           else
           {
-               PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SecondPlayer"), secondPlayerSpawn.position,
-                    secondPlayerSpawn.rotation); 
+               PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SecondPlayer"), secondPlayerSpawn.position, secondPlayerSpawn.rotation);
           }
-
           leave.onClick.AddListener(LeaveRoom);
      }
 

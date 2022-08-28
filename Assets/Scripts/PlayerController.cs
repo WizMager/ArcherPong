@@ -28,25 +28,11 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         FindObjectOfType<ArrowController>().AddPlayerController(this);
-        //_playerView.IsFirstPlayer = PhotonNetwork.IsMasterClient && _photonView.IsMine;
-        if (PhotonNetwork.IsMasterClient)
-        {
-            _playerView.IsFirstPlayer = _photonView.IsMine;
-        }
-        else
-        {
-            _playerView.IsFirstPlayer = !_photonView.IsMine;
-        }
-        Debug.Log(_playerView.IsFirstPlayer);
+        TakeArrow(_playerView.IsFirstPlayer);
         if (_photonView.IsMine)
         {
-            TakeArrow(_playerView.IsFirstPlayer);
+            _playerView.OnWallEnter += WallEntered;
         }
-        else
-        {
-            TakeArrow(!_playerView.IsFirstPlayer);
-        }
-        _playerView.OnWallEnter += WallEntered;
     }
 
     public void TakeArrow(bool hasArrow)

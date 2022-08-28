@@ -233,7 +233,6 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 4282274735872162499}
   - {fileID: 1723539681751080067}
-  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -265,6 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b665f98f164d64bb940382052bd3b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFirstPlayer: 1
 --- !u!114 &4282274735872162499
 MonoBehaviour:
   m_ObjectHideFlags: 0
