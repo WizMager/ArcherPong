@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utils;
 using Views;
 
 public class PlayerController : MonoBehaviour, IOnEventCallback
@@ -62,10 +63,9 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
 
     public void OnEvent(EventData photonEvent)
     {
-        Debug.Log("Take shoot event");
         switch (photonEvent.Code)
         {
-            case 123:
+            case (int)PhotonEventCode.PlayerShoot:
                 OnShoot?.Invoke((bool)photonEvent.CustomData);
                 break;
         }
@@ -76,10 +76,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
-        PhotonNetwork.RaiseEvent(123, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.All},
+        PhotonNetwork.RaiseEvent((int)PhotonEventCode.PlayerShoot, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.All},
             SendOptions.SendReliable);
-        Debug.Log("Send shoot event");
-        //TakeArrow(false);
     }
 
     private void Aiming(InputAction.CallbackContext aiming)

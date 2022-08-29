@@ -38,10 +38,9 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
 
         public void OnEvent(EventData photonEvent)
         {
-            Debug.Log("OnEvent");
             switch (photonEvent.Code)
             {
-                case 1:
+                case (int)PhotonEventCode.ArrowCaught:
                     if ((bool)photonEvent.CustomData)
                     {
                         _playerControllers[0].TakeArrow(true);
@@ -52,8 +51,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
                     }
                     ArrowDisable();
                    break; 
-                case 2:
-                    Debug.Log("Event work");
+                case (int)PhotonEventCode.ArrowEnable:
                     _spriteRenderer.enabled = true;
                     break;
             }
@@ -62,7 +60,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         private void ArrowCaught(bool isFirstPlayer)
         {
             if (!PhotonNetwork.IsMasterClient) return;
-            PhotonNetwork.RaiseEvent(1, isFirstPlayer, RaiseEventOptions.Default,
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             if (isFirstPlayer)
             {
@@ -113,7 +111,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         {
             if (!PhotonNetwork.IsMasterClient) return;
             _spriteRenderer.enabled = true;
-            PhotonNetwork.RaiseEvent(2, null, RaiseEventOptions.Default,
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowEnable, null, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
         }
