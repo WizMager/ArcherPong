@@ -1,39 +1,69 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using Utils;
 using Views;
 
-public class ArrowController : MonoBehaviour
+public class ArrowController : MonoBehaviour, IOnEventCallback
 {
         [SerializeField] private float arrowMoveSpeed;
-        private GameObject _arrow;
         private ArrowView _arrowView;
         private Rigidbody2D _rigidbody;
         private Transform _transform;
+        private SpriteRenderer _spriteRenderer;
+        private PhotonView _photonView;
         private Vector2 _currentVelocity;
         private List<PlayerController> _playerControllers = new();
 
         private void Start()
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                _arrow = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Arrow"), new Vector3(10, 10,0), Quaternion.identity);
-                _arrowView = _arrow.GetComponent<ArrowView>();
-                _rigidbody = _arrow.GetComponent<Rigidbody2D>();
-                _transform = _arrow.GetComponent<Transform>();
-                _arrowView.OnReflect += ArrowReflected;
-                _arrowView.OnCatch += ArrowCaught;
-                _arrow.GetComponent<SpriteRenderer>().enabled = true;
-                ArrowDisable();
-            }
+            _arrowView = GetComponent<ArrowView>();
+            _rigidbody = GetComponent<Rigidbody2D>();
+            _transform = GetComponent<Transform>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _photonView = GetComponent<PhotonView>();
+            _arrowView.OnReflect += ArrowReflected;
+            _arrowView.OnCatch += ArrowCaught;
+            ArrowDisable();
         }
 
+        private void OnEnable()
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+
+        public void OnEvent(EventData photonEvent)
+        {
+            Debug.Log("OnEvent");
+            switch (photonEvent.Code)
+            {
+                case 1:
+                    if ((bool)photonEvent.CustomData)
+                    {
+                        _playerControllers[0].TakeArrow(true);
+                    }
+                    else
+                    {
+                        _playerControllers[1].TakeArrow(true);
+                    }
+                    ArrowDisable();
+                   break; 
+                case 2:
+                    Debug.Log("Event work");
+                    _spriteRenderer.enabled = true;
+                    break;
+            }
+        }
+        
         private void ArrowCaught(bool isFirstPlayer)
         {
-            ArrowDisable();
             if (!PhotonNetwork.IsMasterClient) return;
+            PhotonNetwork.RaiseEvent(1, isFirstPlayer, RaiseEventOptions.Default,
+                SendOptions.SendReliable);
             if (isFirstPlayer)
             {
                _playerControllers[0].TakeArrow(true);
@@ -42,11 +72,12 @@ public class ArrowController : MonoBehaviour
             {
                 _playerControllers[1].TakeArrow(true);
             }
+            ArrowDisable();
         }
 
         private void ArrowReflected(Vector2 normal)
         {
-            if (!PhotonNetwork.IsMasterClient) return;
+            //if (!PhotonNetwork.IsMasterClient) return;
             var direction = Vector2.Reflect(_currentVelocity.normalized, normal);
             _rigidbody.velocity = direction * arrowMoveSpeed;
             _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) * _transform.rotation;
@@ -61,37 +92,49 @@ public class ArrowController : MonoBehaviour
             _playerControllers = _playerControllers.OrderBy(p => p.GetComponent<PhotonView>().Owner.ActorNumber).ToList();
         }
 
-        private void Shooted(Vector2 arrowPosition, Quaternion arrowRotation)
+        private void Shooted(bool isFirstPlayer)
         {
-            _transform.SetPositionAndRotation(arrowPosition,arrowRotation);
-            foreach (var controller in _playerControllers)
+            if (isFirstPlayer)
             {
-                controller.TakeArrow(false);
+                var shootPosition = _playerControllers[0].GetShootPosition;
+                _transform.SetPositionAndRotation(shootPosition.position, shootPosition.rotation);
+                _playerControllers[0].TakeArrow(false);
+            }
+            else
+            {
+                var shootPosition = _playerControllers[1].GetShootPosition;
+                _transform.SetPositionAndRotation(shootPosition.position, shootPosition.rotation);
+                _playerControllers[1].TakeArrow(false);
             }
             ArrowEnable();
         }
 
         private void ArrowEnable()
         {
-            _arrow.SetActive(true);
             if (!PhotonNetwork.IsMasterClient) return;
-            _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse); 
+            _spriteRenderer.enabled = true;
+            PhotonNetwork.RaiseEvent(2, null, RaiseEventOptions.Default,
+                SendOptions.SendReliable);
+            _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
         }
 
         private void ArrowDisable()
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                _rigidbody.velocity = Vector2.zero;
-                _rigidbody.angularVelocity = 0;
-            }
-            _arrow.SetActive(false);
+            _spriteRenderer.enabled = false;
+            //if (!PhotonNetwork.IsMasterClient) return;
+            _rigidbody.velocity = Vector2.zero;
+            _rigidbody.angularVelocity = 0;
         }
 
         private void FixedUpdate()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
+            //if (!PhotonNetwork.IsMasterClient) return;
             _currentVelocity = _rigidbody.velocity;
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
         }
 
         private void OnDestroy()
@@ -100,6 +143,6 @@ public class ArrowController : MonoBehaviour
             {
                 playerController.OnShoot -= Shooted;
             }
-            Destroy(_arrow);
+            Destroy(gameObject);
         }
 }

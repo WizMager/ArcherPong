@@ -1,12 +1,14 @@
 ﻿using System;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Views;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IOnEventCallback
 {
-    public Action<Vector2, Quaternion> OnShoot;
+    public Action<bool> OnShoot;
     [SerializeField] private float playerMoveSpeed;
     [SerializeField] private Transform bow;
     [SerializeField] private SpriteRenderer bowArrow;
@@ -16,7 +18,9 @@ public class PlayerController : MonoBehaviour
     private PhotonView _photonView;
     private PlayerView _playerView;
     private bool _hasArrow;
-        
+
+    public Transform GetShootPosition => shootPosition;
+    
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -53,15 +57,29 @@ public class PlayerController : MonoBehaviour
         _playerInput.Player.Shoot.Enable();
         _playerInput.Player.Aiming.performed += Aiming;
         _playerInput.Player.Shoot.performed += Shoot;
+        PhotonNetwork.AddCallbackTarget(this);
     }
 
+    public void OnEvent(EventData photonEvent)
+    {
+        Debug.Log("Take shoot event");
+        switch (photonEvent.Code)
+        {
+            case 123:
+                OnShoot?.Invoke((bool)photonEvent.CustomData);
+                break;
+        }
+    }
+    
     private void Shoot(InputAction.CallbackContext obj)
     {
         //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
-        OnShoot?.Invoke(shootPosition.position, shootPosition.rotation);
-        TakeArrow(false);
+        PhotonNetwork.RaiseEvent(123, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.All},
+            SendOptions.SendReliable);
+        Debug.Log("Send shoot event");
+        //TakeArrow(false);
     }
 
     private void Aiming(InputAction.CallbackContext aiming)
@@ -87,6 +105,7 @@ public class PlayerController : MonoBehaviour
         _playerInput.Player.Move.Disable();
         _playerInput.Player.Aiming.Disable();
         _playerInput.Player.Shoot.Disable();
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     private void OnDestroy()
