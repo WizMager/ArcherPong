@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         switch (photonEvent.Code)
         {
             case (int)PhotonEventCode.PlayerShoot:
+                if (!_photonView.IsMine) return;
                 OnShoot?.Invoke((bool)photonEvent.CustomData);
                 break;
         }
@@ -76,7 +77,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
-        PhotonNetwork.RaiseEvent((int)PhotonEventCode.PlayerShoot, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.All},
+        PhotonNetwork.RaiseEvent((int)PhotonEventCode.PlayerShoot, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.MasterClient},
             SendOptions.SendReliable);
     }
 

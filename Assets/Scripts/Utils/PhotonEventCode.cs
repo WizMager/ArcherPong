@@ -4,6 +4,7 @@
     {
         ArrowCaught,
         ArrowEnable,
-        PlayerShoot
+        PlayerShoot,
+        ArrowShoot
     }
 }

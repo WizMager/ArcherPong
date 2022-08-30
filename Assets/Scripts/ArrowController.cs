@@ -15,7 +15,6 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         private Rigidbody2D _rigidbody;
         private Transform _transform;
         private SpriteRenderer _spriteRenderer;
-        private PhotonView _photonView;
         private Vector2 _currentVelocity;
         private List<PlayerController> _playerControllers = new();
 
@@ -25,7 +24,6 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             _rigidbody = GetComponent<Rigidbody2D>();
             _transform = GetComponent<Transform>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _photonView = GetComponent<PhotonView>();
             _arrowView.OnReflect += ArrowReflected;
             _arrowView.OnCatch += ArrowCaught;
             ArrowDisable();
@@ -41,18 +39,13 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             switch (photonEvent.Code)
             {
                 case (int)PhotonEventCode.ArrowCaught:
-                    if ((bool)photonEvent.CustomData)
-                    {
-                        _playerControllers[0].TakeArrow(true);
-                    }
-                    else
-                    {
-                        _playerControllers[1].TakeArrow(true);
-                    }
-                    ArrowDisable();
+                    ArrowCatchActivation((bool)photonEvent.CustomData);
                    break; 
                 case (int)PhotonEventCode.ArrowEnable:
                     _spriteRenderer.enabled = true;
+                    break;
+                case (int)PhotonEventCode.ArrowShoot:
+                    PrepareShootArrow((bool)photonEvent.CustomData);
                     break;
             }
         }
@@ -62,9 +55,14 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             if (!PhotonNetwork.IsMasterClient) return;
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
+            ArrowCatchActivation(isFirstPlayer);
+        }
+
+        private void ArrowCatchActivation(bool isFirstPlayer)
+        {
             if (isFirstPlayer)
             {
-               _playerControllers[0].TakeArrow(true);
+                _playerControllers[0].TakeArrow(true);
             }
             else
             {
@@ -72,7 +70,14 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             }
             ArrowDisable();
         }
-
+        
+        private void ArrowDisable()
+        {
+            _spriteRenderer.enabled = false;
+            _rigidbody.velocity = Vector2.zero;
+            _rigidbody.angularVelocity = 0;
+        }
+        
         private void ArrowReflected(Vector2 normal)
         {
             //if (!PhotonNetwork.IsMasterClient) return;
@@ -92,6 +97,14 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
 
         private void Shooted(bool isFirstPlayer)
         {
+            PrepareShootArrow(isFirstPlayer);
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowShoot, isFirstPlayer, RaiseEventOptions.Default,
+                SendOptions.SendReliable);
+            ArrowEnable();
+        }
+
+        private void PrepareShootArrow(bool isFirstPlayer)
+        {
             if (isFirstPlayer)
             {
                 var shootPosition = _playerControllers[0].GetShootPosition;
@@ -104,24 +117,14 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
                 _transform.SetPositionAndRotation(shootPosition.position, shootPosition.rotation);
                 _playerControllers[1].TakeArrow(false);
             }
-            ArrowEnable();
         }
-
+        
         private void ArrowEnable()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
             _spriteRenderer.enabled = true;
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowEnable, null, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
-        }
-
-        private void ArrowDisable()
-        {
-            _spriteRenderer.enabled = false;
-            //if (!PhotonNetwork.IsMasterClient) return;
-            _rigidbody.velocity = Vector2.zero;
-            _rigidbody.angularVelocity = 0;
         }
 
         private void FixedUpdate()
