@@ -1,5 +1,4 @@
-﻿using System;
-using ExitGames.Client.Photon;
+﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -49,5 +48,11 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
                 secondPlayerScore.text = photonEvent.CustomData.ToString();
                 break;
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        arrowController.OnPlayerMiss -= ArrowMissed;
     }
 }

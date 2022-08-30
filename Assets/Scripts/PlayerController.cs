@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Shoot(InputAction.CallbackContext obj)
     {
-        //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
         PhotonNetwork.RaiseEvent((int)PhotonEventCode.PlayerShoot, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.MasterClient},
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Update()
     {
-        //if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
         if (!_photonView.IsMine) return;
         transform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
     }
