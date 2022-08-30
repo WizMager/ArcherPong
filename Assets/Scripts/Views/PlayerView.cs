@@ -6,8 +6,9 @@ namespace Views
      public class PlayerView : MonoBehaviour
      {
           public Action<Vector3> OnWallEnter;
-
-          public bool IsFirstPlayer { get; set; }
+          [SerializeField] private bool isFirstPlayer;
+          
+          public bool IsFirstPlayer => isFirstPlayer;
 
           private void OnCollisionEnter2D(Collision2D col)
           {

@@ -1,4 +1,5 @@
 ﻿using Controllers.Interfaces;
+using Photon.Pun;
 using UnityEngine;
 using Views;
 
@@ -6,28 +7,28 @@ namespace Controllers
 {
     public class PlayerMoveController : IStart,IEnable, IDisable, ICleanup, IExecute, IAwake
     {
-        private ArrowController _arrowController;
-        private Transform _playerTransform;
-        private float _playerMoveSpeed;
-        private bool _isFirstPlayer;
-        private PlayerView _playerView;
+        private ArrowControllerOld _arrowControllerOld;
+        private readonly Transform _playerTransform;
+        private readonly float _playerMoveSpeed;
+        private readonly PhotonView _photonView;
+        private readonly PlayerView _playerView;
         private PlayerInput _playerInput;
-        private Vector2 _startPosition;
-        private Quaternion _startRotation;
+        private readonly Vector2 _startPosition;
+        private readonly Quaternion _startRotation;
 
-        public PlayerMoveController(GameObject player, float playerMoveSpeed)
+        public PlayerMoveController(GameObject player, float playerMoveSpeed, PhotonView photonView)
         {
             _playerTransform = player.GetComponent<Transform>();
             _playerView = player.GetComponent<PlayerView>();
-            _isFirstPlayer = _playerView.IsFirstPlayer;
             _playerMoveSpeed = playerMoveSpeed;
+            _photonView = photonView;
             _startPosition = _playerTransform.position;
             _startRotation = _playerTransform.rotation;
         }
 
-        public void GetArrowController(ArrowController arrowController)
+        public void GetArrowController(ArrowControllerOld arrowControllerOld)
         {
-            _arrowController = arrowController;
+            _arrowControllerOld = arrowControllerOld;
         }
         
         public void Awake()
@@ -37,7 +38,7 @@ namespace Controllers
         
         public void Start()
         {
-            _arrowController.OnArrowMiss += ArrowMissed;
+            _arrowControllerOld.OnArrowMiss += ArrowMissed;
             _playerView.OnWallEnter += WallEntered;
         }
 
@@ -53,43 +54,25 @@ namespace Controllers
 
         public void Cleanup()
         {
-            _arrowController.OnArrowMiss -= ArrowMissed;
+            _arrowControllerOld.OnArrowMiss -= ArrowMissed;
         }
 
         public void OnEnable()
         {
-            if (_isFirstPlayer)
-            {
-                _playerInput.Player.Move.Enable(); 
-            }
-            else
-            {
-                _playerInput.PlayerTwo.Move.Enable();
-            }
+            //if (!_photonView.IsMine) return;
+            _playerInput.Player.Move.Enable();
         }
 
         public void OnDisable()
         {
-            if (_isFirstPlayer)
-            {
-                _playerInput.Player.Move.Disable(); 
-            }
-            else
-            {
-                _playerInput.PlayerTwo.Move.Disable();
-            }
+            //if (!_photonView.IsMine) return;
+            _playerInput.Player.Move.Disable();
         }
 
         public void Execute(float deltaTime)
         {
-            if (_isFirstPlayer)
-            {
-                _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * _playerMoveSpeed * Time.deltaTime);
-            }
-            else
-            {
-                _playerTransform.Translate(_playerInput.PlayerTwo.Move.ReadValue<Vector2>() * _playerMoveSpeed * Time.deltaTime);
-            }
+            if (!_photonView.IsMine) return;
+            _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * _playerMoveSpeed * Time.deltaTime);
         }
     }
 }
