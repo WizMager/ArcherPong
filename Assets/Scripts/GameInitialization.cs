@@ -27,7 +27,7 @@ public class GameInitialization
                 controllers.Add(playerMoveController);
                 
                 var scoreModel = new ScoreModel(firstPlayerScoreView, secondPlayerScoreView);
-                var scoreController = new ScoreController(scoreModel, arrowController);
+                var scoreController = new ScoreControllerMVC(scoreModel, arrowController);
                 controllers.Add(scoreController);
                 
                 foreach (var shootController in playerShootControllers)

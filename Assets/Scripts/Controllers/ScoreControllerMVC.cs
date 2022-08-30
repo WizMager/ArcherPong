@@ -3,12 +3,12 @@ using Model;
 
 namespace Controllers
 {
-    public class ScoreController : IStart, ICleanup
+    public class ScoreControllerMVC : IStart, ICleanup
     {
         private ScoreModel _scoreModel;
         private ArrowControllerOld _arrowControllerOld;
 
-        public ScoreController(ScoreModel scoreModel, ArrowControllerOld arrowControllerOld)
+        public ScoreControllerMVC(ScoreModel scoreModel, ArrowControllerOld arrowControllerOld)
         {
             _scoreModel = scoreModel;
             _arrowControllerOld = arrowControllerOld;

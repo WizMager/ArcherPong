@@ -10,6 +10,7 @@ using Views;
 
 public class ArrowController : MonoBehaviour, IOnEventCallback
 {
+        public Action<bool> OnPlayerMiss;
         [SerializeField] private float arrowMoveSpeed;
         private ArrowView _arrowView;
         private Rigidbody2D _rigidbody;
@@ -26,6 +27,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _arrowView.OnReflect += ArrowReflected;
             _arrowView.OnCatch += ArrowCaught;
+            _arrowView.OnMiss += PlayerMissedArrow;
             ArrowDisable();
         }
 
@@ -39,7 +41,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             switch (photonEvent.Code)
             {
                 case (int)PhotonEventCode.ArrowCaught:
-                    ArrowCatchActivation((bool)photonEvent.CustomData);
+                    ArrowTake((bool)photonEvent.CustomData);
                    break; 
                 case (int)PhotonEventCode.ArrowEnable:
                     _spriteRenderer.enabled = true;
@@ -55,10 +57,10 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             if (!PhotonNetwork.IsMasterClient) return;
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
-            ArrowCatchActivation(isFirstPlayer);
+            ArrowTake(isFirstPlayer);
         }
 
-        private void ArrowCatchActivation(bool isFirstPlayer)
+        private void ArrowTake(bool isFirstPlayer)
         {
             if (isFirstPlayer)
             {
@@ -84,6 +86,15 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             var direction = Vector2.Reflect(_currentVelocity.normalized, normal);
             _rigidbody.velocity = direction * arrowMoveSpeed;
             _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) * _transform.rotation;
+        }
+
+        private void PlayerMissedArrow(bool isFirstPlayer)
+        {
+            if (!PhotonNetwork.IsMasterClient) return;
+            ArrowTake(isFirstPlayer);
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
+                SendOptions.SendReliable);
+            OnPlayerMiss?.Invoke(isFirstPlayer);
         }
 
         public void AddPlayerController(PlayerController playerController)
