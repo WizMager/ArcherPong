@@ -82,7 +82,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         
         private void ArrowReflected(Vector2 normal)
         {
-            //if (!PhotonNetwork.IsMasterClient) return;
+            if (!PhotonNetwork.IsMasterClient) return;
             var direction = Vector2.Reflect(_currentVelocity.normalized, normal);
             _rigidbody.velocity = direction * arrowMoveSpeed;
             _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) * _transform.rotation;
@@ -140,7 +140,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
 
         private void FixedUpdate()
         {
-            //if (!PhotonNetwork.IsMasterClient) return;
+            if (!PhotonNetwork.IsMasterClient) return;
             _currentVelocity = _rigidbody.velocity;
         }
 

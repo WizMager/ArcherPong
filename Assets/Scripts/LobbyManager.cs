@@ -7,6 +7,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Button join;
     [SerializeField] private Button create;
+    [SerializeField] private GameObject connectionLabel;
     
     private void Start()
     {
@@ -18,11 +19,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         join.onClick.AddListener(JoinRoom);
         create.onClick.AddListener(CreateRoom);
+        join.gameObject.SetActive(false);
+        create.gameObject.SetActive(false);
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected To Master");
+        join.gameObject.SetActive(true);
+        create.gameObject.SetActive(true);
+        connectionLabel.SetActive(false);
     }
 
     private void CreateRoom()

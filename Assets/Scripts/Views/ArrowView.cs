@@ -14,10 +14,9 @@ namespace Views
 
             if (CompareTag("Wall"))
             {
-                var destroyPlayerWall = col.gameObject.GetComponent<DestroyPlayerWall>();
+                var destroyPlayerWall = col.gameObject.GetComponent<PlayerWallView>();
                 if (destroyPlayerWall)
                 {
-                    //OnReflect?.Invoke(col.contacts[0].normal);
                     OnMiss?.Invoke(destroyPlayerWall.IsFirstPlayer);
                 }
                 else
