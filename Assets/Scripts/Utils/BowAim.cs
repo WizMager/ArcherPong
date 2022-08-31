@@ -14,7 +14,6 @@ namespace Utils
               {
                      _mainCamera = Camera.main;
                      _playerInput = new PlayerInput();
-                     //_photonView = GetComponentInParent<PhotonView>();
               }
 
               private void OnEnable()

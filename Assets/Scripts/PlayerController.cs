@@ -97,7 +97,12 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         var mouseDirection = worldMousePosition - transform.position;
         mouseDirection.Normalize();
         var angleAxisZ = Mathf.Atan2(mouseDirection.y, mouseDirection.x) * Mathf.Rad2Deg - 90f;
-        bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZ);
+        var angleAxisZClamped = Math.Clamp(angleAxisZ, -70f, 70f);
+        if (angleAxisZ is > -270f and < -185f)
+        {
+            angleAxisZClamped = 70f;
+        }
+        bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
     }
     
     private void Update()
