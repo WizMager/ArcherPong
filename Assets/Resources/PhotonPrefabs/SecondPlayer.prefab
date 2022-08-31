@@ -265,6 +265,12 @@ MonoBehaviour:
   bow: {fileID: 7595877042427305252}
   bowArrow: {fileID: 7595877042534779316}
   shootPosition: {fileID: 7595877042500595395}
+  clampValue:
+  - -240
+  - -120
+  clampEqualizer:
+  - 0
+  - 90
 --- !u!114 &-131067894982086001
 MonoBehaviour:
   m_ObjectHideFlags: 0

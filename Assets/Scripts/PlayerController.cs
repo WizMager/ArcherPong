@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private Transform bow;
     [SerializeField] private SpriteRenderer bowArrow;
     [SerializeField] private Transform shootPosition;
+    [SerializeField]private float[] clampValue;
+    [SerializeField]private float[] clampEqualizer;
     private Camera _mainCamera;
     private PlayerInput _playerInput;
     private PhotonView _photonView;
@@ -97,10 +99,10 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         var mouseDirection = worldMousePosition - transform.position;
         mouseDirection.Normalize();
         var angleAxisZ = Mathf.Atan2(mouseDirection.y, mouseDirection.x) * Mathf.Rad2Deg - 90f;
-        var angleAxisZClamped = Math.Clamp(angleAxisZ, -70f, 70f);
-        if (angleAxisZ is > -270f and < -185f)
+        var angleAxisZClamped = Math.Clamp(angleAxisZ, clampValue[0], clampValue[1]);
+        if (angleAxisZ > clampEqualizer[0] && angleAxisZ < clampEqualizer[1])
         {
-            angleAxisZClamped = 70f;
+            angleAxisZClamped = _playerView.IsFirstPlayer ? clampValue[1] : clampValue[0];
         }
         bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
     }
