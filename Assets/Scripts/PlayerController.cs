@@ -23,8 +23,14 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private bool _hasArrow;
     private Vector2 _startPosition;
     private Quaternion _startRotation;
+    private bool _stopMove;
 
     public Transform GetShootPosition => shootPosition;
+
+    public bool StopMove
+    {
+        set => _stopMove = value;
+    }
     
     private void Awake()
     {
@@ -37,6 +43,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private void Start()
     {
         FindObjectOfType<ArrowController>().AddPlayerController(this);
+        FindObjectOfType<ScoreController>().AddPlayerController(this);
         TakeArrow(_playerView.IsFirstPlayer);
         _startPosition = transform.position;
         _startRotation = transform.rotation;
@@ -49,7 +56,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         transform.position = _startPosition;
         transform.rotation = _startRotation;
     }
-    
+
     public void TakeArrow(bool hasArrow)
     {
         _hasArrow = hasArrow;
@@ -84,7 +91,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Shoot(InputAction.CallbackContext obj)
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
         PhotonNetwork.RaiseEvent((int)PhotonEventCode.PlayerShoot, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.MasterClient},
@@ -109,7 +116,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Update()
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount != 2) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
         transform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
     }

@@ -18,7 +18,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         private Transform _transform;
         private SpriteRenderer _spriteRenderer;
         private Vector2 _currentVelocity;
-        private List<PlayerController> _playerControllers = new();
+        private List<PlayerController> _playerControllers = new(2);
 
         private void Start()
         {
@@ -37,6 +37,15 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             PhotonNetwork.AddCallbackTarget(this);
         }
 
+        public void AddPlayerController(PlayerController playerController)
+        {
+            _playerControllers.Add(playerController);
+            playerController.OnShoot += Shooted;
+            
+            if (_playerControllers.Count != 2) return;
+            _playerControllers = _playerControllers.OrderBy(p => p.GetComponent<PhotonView>().Owner.ActorNumber).ToList();
+        }
+        
         public void OnEvent(EventData photonEvent)
         {
             switch (photonEvent.Code)
@@ -115,15 +124,6 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             {
                 controller.SetStartPosition();
             }
-        }
-        
-        public void AddPlayerController(PlayerController playerController)
-        {
-            _playerControllers.Add(playerController);
-            playerController.OnShoot += Shooted;
-            
-            if (_playerControllers.Count != 2) return;
-            _playerControllers = _playerControllers.OrderBy(p => p.GetComponent<PhotonView>().Owner.ActorNumber).ToList();
         }
 
         private void Shooted(bool isFirstPlayer)

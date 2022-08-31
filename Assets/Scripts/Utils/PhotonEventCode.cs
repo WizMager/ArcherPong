@@ -8,6 +8,8 @@
         ArrowShoot,
         ArrowMissed,
         FirstPlayerScore,
-        SecondPlayerScore
+        SecondPlayerScore,
+        WatchWinScore,
+        StopWatchWinScore
     }
 }
