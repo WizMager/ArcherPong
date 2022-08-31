@@ -12,6 +12,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
 {
         public Action<bool> OnPlayerMiss;
         [SerializeField] private float arrowMoveSpeed;
+        [SerializeField] private bool setStartPositionAfterMissArrow;
         private ArrowView _arrowView;
         private Rigidbody2D _rigidbody;
         private Transform _transform;
@@ -51,7 +52,10 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
                     break;
                 case (int)PhotonEventCode.ArrowMissed:
                     ArrowTake((bool)photonEvent.CustomData);
-                    SetPlayersStartPosition();
+                    if (setStartPositionAfterMissArrow)
+                    {
+                        SetPlayersStartPosition(); 
+                    }
                     break;
             }
         }
@@ -96,7 +100,10 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         {
             if (!PhotonNetwork.IsMasterClient) return;
             ArrowTake(isFirstPlayer);
-            SetPlayersStartPosition();
+            if (setStartPositionAfterMissArrow)
+            {
+                SetPlayersStartPosition(); 
+            }
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowMissed, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             OnPlayerMiss?.Invoke(isFirstPlayer);
