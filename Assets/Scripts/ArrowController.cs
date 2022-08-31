@@ -11,17 +11,22 @@ using Views;
 public class ArrowController : MonoBehaviour, IOnEventCallback
 {
         public Action<bool> OnPlayerMiss;
-        [SerializeField] private float arrowMoveSpeed;
+        [SerializeField] private float startArrowMoveSpeed;
+        [SerializeField] private float maxArrowMoveSpeed;
         [SerializeField] private bool setStartPositionAfterMissArrow;
+        [SerializeField] private int arrowMoveSpeedMultiply;
+        [SerializeField] private ScoreController scoreController;
         private ArrowView _arrowView;
         private Rigidbody2D _rigidbody;
         private Transform _transform;
         private SpriteRenderer _spriteRenderer;
         private Vector2 _currentVelocity;
         private List<PlayerController> _playerControllers = new(2);
+        private float _arrowMoveSpeed;
 
         private void Start()
         {
+            _arrowMoveSpeed = startArrowMoveSpeed;
             _arrowView = GetComponent<ArrowView>();
             _rigidbody = GetComponent<Rigidbody2D>();
             _transform = GetComponent<Transform>();
@@ -29,6 +34,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             _arrowView.OnReflect += ArrowReflected;
             _arrowView.OnCatch += ArrowCaught;
             _arrowView.OnMiss += PlayerMissedArrow;
+            scoreController.OnStartNextRound += SetStartArrowMoveSpeed;
             ArrowDisable();
         }
 
@@ -69,12 +75,19 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             }
         }
         
+        private void SetStartArrowMoveSpeed()
+        {
+            _arrowMoveSpeed = startArrowMoveSpeed;
+        }
+        
         private void ArrowCaught(bool isFirstPlayer)
         {
             if (!PhotonNetwork.IsMasterClient) return;
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             ArrowTake(isFirstPlayer);
+            if (_arrowMoveSpeed > maxArrowMoveSpeed)return;
+            _arrowMoveSpeed += _arrowMoveSpeed / 100 * arrowMoveSpeedMultiply;
         }
 
         private void ArrowTake(bool isFirstPlayer)
@@ -101,7 +114,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         {
             if (!PhotonNetwork.IsMasterClient) return;
             var direction = Vector2.Reflect(_currentVelocity.normalized, normal);
-            _rigidbody.velocity = direction * arrowMoveSpeed;
+            _rigidbody.velocity = direction * _arrowMoveSpeed;
             _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) * _transform.rotation;
         }
 
@@ -155,7 +168,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             _spriteRenderer.enabled = true;
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowEnable, null, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
-            _rigidbody.AddForce(_transform.up * arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
+            _rigidbody.AddForce(_transform.up * _arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
         }
 
         private void FixedUpdate()

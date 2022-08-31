@@ -1877,8 +1877,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8df2bd5d3a11486389f368747cdb67c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowMoveSpeed: 5
+  startArrowMoveSpeed: 5
+  maxArrowMoveSpeed: 15
   setStartPositionAfterMissArrow: 1
+  arrowMoveSpeedMultiply: 20
+  scoreController: {fileID: 884413292}
 --- !u!1 &1009723858
 GameObject:
   m_ObjectHideFlags: 0

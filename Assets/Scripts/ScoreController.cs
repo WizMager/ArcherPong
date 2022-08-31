@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
@@ -9,6 +10,7 @@ using Utils;
 
 public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
 {
+    public Action OnStartNextRound;
     [SerializeField] private TMP_Text firstPlayerScore;
     [SerializeField] private TMP_Text secondPlayerScore;
     [SerializeField] private TMP_Text winLabel;
@@ -88,6 +90,7 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
         StopWatchWinScore();
         PhotonNetwork.RaiseEvent((int)PhotonEventCode.StopWatchWinScore, null, RaiseEventOptions.Default,
             SendOptions.SendReliable);
+        OnStartNextRound?.Invoke();
     }
 
     public void OnEvent(EventData photonEvent)
