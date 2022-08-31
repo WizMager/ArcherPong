@@ -49,6 +49,10 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
                 case (int)PhotonEventCode.ArrowShoot:
                     PrepareShootArrow((bool)photonEvent.CustomData);
                     break;
+                case (int)PhotonEventCode.ArrowMissed:
+                    ArrowTake((bool)photonEvent.CustomData);
+                    SetPlayersStartPosition();
+                    break;
             }
         }
         
@@ -92,11 +96,20 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         {
             if (!PhotonNetwork.IsMasterClient) return;
             ArrowTake(isFirstPlayer);
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
+            SetPlayersStartPosition();
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowMissed, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             OnPlayerMiss?.Invoke(isFirstPlayer);
         }
 
+        private void SetPlayersStartPosition()
+        {
+            foreach (var controller in _playerControllers)
+            {
+                controller.SetStartPosition();
+            }
+        }
+        
         public void AddPlayerController(PlayerController playerController)
         {
             _playerControllers.Add(playerController);

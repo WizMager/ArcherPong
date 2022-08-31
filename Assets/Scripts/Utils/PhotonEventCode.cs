@@ -6,6 +6,7 @@
         ArrowEnable,
         PlayerShoot,
         ArrowShoot,
+        ArrowMissed,
         FirstPlayerScore,
         SecondPlayerScore
     }

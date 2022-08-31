@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private PhotonView _photonView;
     private PlayerView _playerView;
     private bool _hasArrow;
+    private Vector2 _startPosition;
+    private Quaternion _startRotation;
 
     public Transform GetShootPosition => shootPosition;
     
@@ -34,12 +36,18 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         TakeArrow(_playerView.IsFirstPlayer);
-        if (_photonView.IsMine)
-        {
-            _playerView.OnWallEnter += WallEntered;
-        }
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
+        if (!_photonView.IsMine) return;
+        _playerView.OnWallEnter += WallEntered;
     }
 
+    public void SetStartPosition()
+    {
+        transform.position = _startPosition;
+        transform.rotation = _startRotation;
+    }
+    
     public void TakeArrow(bool hasArrow)
     {
         _hasArrow = hasArrow;
