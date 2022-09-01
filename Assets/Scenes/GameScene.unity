@@ -1882,6 +1882,9 @@ MonoBehaviour:
   setStartPositionAfterMissArrow: 1
   arrowMoveSpeedMultiply: 20
   scoreController: {fileID: 884413292}
+  startTimeBeforeShoot: 2
+  minimalTimeBeforeShoot: 1
+  timeBeforeShootMultiply: 20
 --- !u!1 &1009723858
 GameObject:
   m_ObjectHideFlags: 0

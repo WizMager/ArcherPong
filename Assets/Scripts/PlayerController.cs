@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -14,8 +15,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private Transform bow;
     [SerializeField] private SpriteRenderer bowArrow;
     [SerializeField] private Transform shootPosition;
-    [SerializeField]private float[] clampValue;
-    [SerializeField]private float[] clampEqualizer;
+    [SerializeField] private float[] clampValue;
+    [SerializeField] private float[] clampEqualizer;
     private Camera _mainCamera;
     private PlayerInput _playerInput;
     private PhotonView _photonView;
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         FindObjectOfType<ScoreController>().AddPlayerController(this);
-        TakeArrow(_playerView.IsFirstPlayer);
+        TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = transform.position;
         _startRotation = transform.rotation;
         if (!_photonView.IsMine) return;
@@ -57,10 +58,21 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         transform.rotation = _startRotation;
     }
 
-    public void TakeArrow(bool hasArrow)
+    public void TakeArrow(bool hasArrow, (bool timerEnable, float timeBeforeShoot) timer)
     {
         _hasArrow = hasArrow;
         bowArrow.enabled = _hasArrow;
+        if (!timer.timerEnable)return;
+        StartCoroutine(TimeBeforeShoot(timer.timeBeforeShoot));
+    }
+
+    private IEnumerator TimeBeforeShoot(float timeBeforeShoot)
+    {
+        for (float i = 0; i < timeBeforeShoot; i += Time.deltaTime)
+        {
+            yield return null;
+        }
+        Shoot(new InputAction.CallbackContext());
     }
     
     private void WallEntered(Vector3 normal)
