@@ -129,6 +129,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowMissed, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             OnPlayerMiss?.Invoke(isFirstPlayer);
+            SetStartArrowMoveSpeed();
         }
 
         private void SetPlayersStartPosition()
