@@ -37,10 +37,11 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Awake()
     {
-        _playerInput = new PlayerInput();
         _photonView = GetComponent<PhotonView>();
         _playerView = GetComponent<PlayerView>();
         _playerTransform = GetComponent<Transform>();
+        if (!_photonView.IsMine) return;
+        _playerInput = new PlayerInput();
         _mainCamera = Camera.main;
     }
 
@@ -51,13 +52,13 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = _playerTransform.position;
         _startRotation = _playerTransform.rotation;
-        if (!PhotonNetwork.IsMasterClient && _photonView.IsMine)
-        {
-          _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
-          _mainCamera.transform.Rotate(0, 0, 180f);
-          _wallColliders.transform.Rotate(0, 0, 180f);
-        }
         if (!_photonView.IsMine) return;
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
+            _mainCamera.transform.Rotate(0, 0, 180f);
+            _wallColliders.transform.Rotate(0, 0, 180f);
+        }
         _playerView.OnWallEnter += WallEntered;
     }
 
@@ -91,6 +92,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void OnEnable()
     {
+        if (!_photonView.IsMine) return;
         _playerInput.Player.Move.Enable();
         _playerInput.Player.Aiming.Enable();
         _playerInput.Player.Shoot.Enable();
@@ -144,6 +146,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
 
     private void OnDisable()
     {
+        if (!_photonView.IsMine) return;
         _playerInput.Player.Move.Disable();
         _playerInput.Player.Aiming.Disable();
         _playerInput.Player.Shoot.Disable();
@@ -152,6 +155,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
 
     private void OnDestroy()
     {
+        if (!_photonView.IsMine) return;
         _playerView.OnWallEnter -= WallEntered;
         _playerInput.Player.Aiming.performed -= Aiming;
         _playerInput.Player.Shoot.performed -= Shoot;
