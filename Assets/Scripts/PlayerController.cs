@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private Transform shootPosition;
     [SerializeField] private float[] clampValue;
     [SerializeField] private float[] clampEqualizer;
+    private GameObject _environment;
     private Camera _mainCamera;
     private PlayerInput _playerInput;
     private PhotonView _photonView;
@@ -48,6 +49,13 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = transform.position;
         _startRotation = transform.rotation;
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log(PhotonNetwork.IsMasterClient);
+            _environment = FindObjectOfType<EnvironmentView>().gameObject;
+          _mainCamera.transform.Rotate(0, 0, 90f); 
+          _environment.transform.Rotate(0, 0, 90f);
+        }
         if (!_photonView.IsMine) return;
         _playerView.OnWallEnter += WallEntered;
     }
