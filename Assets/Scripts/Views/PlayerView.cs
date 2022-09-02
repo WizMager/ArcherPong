@@ -18,11 +18,6 @@ namespace Views
                {
                     OnWallEnter?.Invoke(col.contacts[0].normal);
                }
-
-               if (colliderTag == "PlayerWallLimiter")
-               {
-                    OnWallEnter?.Invoke(col.contacts[0].normal);
-               }
           }
      }
 }
