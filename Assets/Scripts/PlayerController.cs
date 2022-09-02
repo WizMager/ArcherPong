@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private Transform shootPosition;
     [SerializeField] private float[] clampValue;
     [SerializeField] private float[] clampEqualizer;
-    private GameObject _environment;
+    private Transform _playerTransform;
     private GameObject _wallColliders;
     private Camera _mainCamera;
     private PlayerInput _playerInput;
@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         _playerInput = new PlayerInput();
         _photonView = GetComponent<PhotonView>();
         _playerView = GetComponent<PlayerView>();
+        _playerTransform = GetComponent<Transform>();
         _mainCamera = Camera.main;
     }
 
@@ -48,14 +49,12 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         FindObjectOfType<ScoreController>().AddPlayerController(this);
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
-        _startPosition = transform.position;
-        _startRotation = transform.rotation;
+        _startPosition = _playerTransform.position;
+        _startRotation = _playerTransform.rotation;
         if (!PhotonNetwork.IsMasterClient && _photonView.IsMine)
-        { 
-          _environment = FindObjectOfType<EnvironmentView>().gameObject;
+        {
           _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
-          _mainCamera.transform.Rotate(0, 0, 180f); 
-          //_environment.transform.Rotate(0, 0, 180f);
+          _mainCamera.transform.Rotate(0, 0, 180f);
           _wallColliders.transform.Rotate(0, 0, 180f);
         }
         if (!_photonView.IsMine) return;
@@ -64,8 +63,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
 
     public void SetStartPosition()
     {
-        transform.position = _startPosition;
-        transform.rotation = _startRotation;
+        _playerTransform.position = _startPosition;
+        _playerTransform.rotation = _startRotation;
     }
 
     public void TakeArrow(bool hasArrow, (bool timerEnable, float timeBeforeShoot) timer)
@@ -87,7 +86,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void WallEntered(Vector3 normal)
     {
-        transform.Translate(normal * playerMoveSpeed * Time.deltaTime);
+        _playerTransform.Translate(normal * playerMoveSpeed * Time.deltaTime);
     }
     
     private void OnEnable()
@@ -125,7 +124,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         if (!_photonView.IsMine) return;
         var mousePosition = aiming.ReadValue<Vector2>();
         var worldMousePosition = _mainCamera.ScreenToWorldPoint(mousePosition);
-        var mouseDirection = worldMousePosition - transform.position;
+        var mouseDirection = worldMousePosition - _playerTransform.position;
         mouseDirection.Normalize();
         var angleAxisZ = Mathf.Atan2(mouseDirection.y, mouseDirection.x) * Mathf.Rad2Deg - 90f;
         var angleAxisZClamped = Math.Clamp(angleAxisZ, clampValue[0], clampValue[1]);
@@ -140,7 +139,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
-        transform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
+        _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
     }
 
     private void OnDisable()
