@@ -109,8 +109,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         _playerInput.Player.Move.Enable();
         _playerInput.Player.Aiming.Enable();
         _playerInput.Player.Shoot.Enable();
-        _playerInput.Player.Aiming.performed += Aiming;
-        _playerInput.Player.Shoot.performed += Shoot;
+        _playerInput.Player.Touch.Enable();
+        _playerInput.Player.Touch.canceled += Shoot;
         PhotonNetwork.AddCallbackTarget(this);
     }
 
@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Shoot(InputAction.CallbackContext obj)
     {
+        Debug.Log("Shoot");
         if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
@@ -134,10 +135,12 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
             SendOptions.SendReliable);
     }
 
-    private void Aiming(InputAction.CallbackContext aiming)
+    private void Aiming()
     {
         if (!_photonView.IsMine) return;
-        var mousePosition = aiming.ReadValue<Vector2>();
+        if (!_hasArrow) return;
+        if (_playerInput.Player.Touch.phase != InputActionPhase.Performed) return;
+        var mousePosition = _playerInput.Player.Aiming.ReadValue<Vector2>();
         var worldMousePosition = _mainCamera.ScreenToWorldPoint(mousePosition);
         var mouseDirection = worldMousePosition - _playerTransform.position;
         mouseDirection.Normalize();
@@ -148,13 +151,22 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
             angleAxisZClamped = _playerView.IsFirstPlayer ? clampValue[1] : clampValue[0];
         }
         bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
+
+    }
+
+    private void Move()
+    {
+        if (_hasArrow) return;
+        _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
     }
     
     private void Update()
     {
+        
         if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
-        _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
+        Aiming();
+        Move();
     }
 
     private void OnDisable()
@@ -163,6 +175,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         _playerInput.Player.Move.Disable();
         _playerInput.Player.Aiming.Disable();
         _playerInput.Player.Shoot.Disable();
+        _playerInput.Player.Touch.Enable();
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
@@ -170,7 +183,6 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         if (!_photonView.IsMine) return;
         _playerView.OnWallEnter -= WallEntered;
-        _playerInput.Player.Aiming.performed -= Aiming;
         _playerInput.Player.Shoot.performed -= Shoot;
     }
 }
