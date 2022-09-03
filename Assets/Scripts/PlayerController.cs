@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private Transform shootPosition;
     [SerializeField] private float[] clampValue;
     [SerializeField] private float[] clampEqualizer;
+    [SerializeField] private Sprite playerFront;
+    [SerializeField] private GameObject playerSprite;
     private Transform _playerTransform;
     private GameObject _wallColliders;
     private Camera _mainCamera;
@@ -27,6 +29,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private Vector2 _startPosition;
     private Quaternion _startRotation;
     private bool _stopMove;
+    private SpriteRenderer _spriteRenderer;
 
     public Transform GetShootPosition => shootPosition;
 
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         _photonView = GetComponent<PhotonView>();
         _playerView = GetComponent<PlayerView>();
+        _spriteRenderer = playerSprite.GetComponent<SpriteRenderer>();
         _playerTransform = GetComponent<Transform>();
         if (!_photonView.IsMine) return;
         _playerInput = new PlayerInput();
@@ -52,14 +56,23 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = _playerTransform.position;
         _startRotation = _playerTransform.rotation;
-        if (!_photonView.IsMine) return;
-        if (!PhotonNetwork.IsMasterClient)
+        if (_photonView.IsMine)
         {
-            _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
-            _mainCamera.transform.Rotate(0, 0, 180f);
-            _wallColliders.transform.Rotate(0, 0, 180f);
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
+                _mainCamera.transform.Rotate(0, 0, 180f);
+                _wallColliders.transform.Rotate(0, 0, 180f);
+            }
+            _playerView.OnWallEnter += WallEntered;
         }
-        _playerView.OnWallEnter += WallEntered;
+        else
+        {
+            _spriteRenderer.sprite = playerFront;
+            _spriteRenderer.flipY = true;
+            _spriteRenderer.sortingOrder = 5;
+            playerSprite.transform.localPosition = new Vector3(0, -0.1f, 0);
+        }
     }
 
     public void SetStartPosition()
