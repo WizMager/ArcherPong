@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private bool _stopMove;
     private SpriteRenderer _spriteRenderer;
     private Transform _stickTransform;
+    private ShootlessPositionView _shootless;
+    private bool _canShoot = true;
 
     public Transform GetShootPosition => shootPosition;
 
@@ -55,6 +57,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         FindObjectOfType<ScoreController>().AddPlayerController(this);
         _stickTransform = FindObjectOfType<JoystickPositionView>().gameObject.transform;
+        _shootless = FindObjectOfType<ShootlessPositionView>();
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = _playerTransform.position;
         _startRotation = _playerTransform.rotation;
@@ -67,6 +70,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
                 _wallColliders.transform.Rotate(0, 0, 180f);
             }
             _playerView.OnWallEnter += WallEntered;
+            _shootless.OnShootActivator += ShootStateChanged;
         }
         else
         {
@@ -75,6 +79,11 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
             _spriteRenderer.sortingOrder = 5;
             playerSprite.transform.localPosition = new Vector3(0, -0.1f, 0);
         }
+    }
+
+    private void ShootStateChanged(bool shootActivate)
+    {
+        _canShoot = shootActivate;
     }
 
     public void SetStartPosition()
@@ -132,6 +141,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
+        if (!_canShoot) return;
         PhotonNetwork.RaiseEvent((int)PhotonEventCode.PlayerShoot, _playerView.IsFirstPlayer, new RaiseEventOptions {Receivers = ReceiverGroup.MasterClient},
             SendOptions.SendReliable);
     }
@@ -156,7 +166,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
 
     private void Move()
     {
-        if (_hasArrow) return;
+        if (_canShoot && _hasArrow) return;
         _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * playerMoveSpeed * Time.deltaTime);
     }
     
