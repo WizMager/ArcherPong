@@ -98,10 +98,10 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
         switch (photonEvent.Code)
         {
             case (int)PhotonEventCode.FirstPlayerScore:
-                firstPlayerScore.text = photonEvent.CustomData.ToString();
+                secondPlayerScore.text = photonEvent.CustomData.ToString();
                 break;
             case (int)PhotonEventCode.SecondPlayerScore:
-                secondPlayerScore.text = photonEvent.CustomData.ToString();
+                firstPlayerScore.text = photonEvent.CustomData.ToString();
                 break;
             case (int)PhotonEventCode.WatchWinScore:
                 WatchWinScore(photonEvent.CustomData.ToString());
