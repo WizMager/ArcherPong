@@ -15,8 +15,10 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private Transform bow;
     [SerializeField] private SpriteRenderer bowArrow;
     [SerializeField] private Transform shootPosition;
-    [SerializeField] private float[] clampValue;
-    [SerializeField] private float[] clampEqualizer;
+    [SerializeField] private float[] clampValueUp;
+    [SerializeField] private float[] clampEqualizerUp;
+    [SerializeField] private float[] clampValueDown;
+    [SerializeField] private float[] clampEqualizerDown;
     [SerializeField] private Sprite playerFront;
     [SerializeField] private GameObject playerSprite;
     private Transform _playerTransform;
@@ -127,7 +129,6 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     
     private void Shoot(InputAction.CallbackContext obj)
     {
-        Debug.Log("Shoot");
         if (PhotonNetwork.CurrentRoom.PlayerCount != 2 || _stopMove) return;
         if (!_photonView.IsMine) return;
         if (!_hasArrow) return;
@@ -145,13 +146,20 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         var mouseDirection = worldMousePosition - _playerTransform.position;
         mouseDirection.Normalize();
         var angleAxisZ = Mathf.Atan2(mouseDirection.y, mouseDirection.x) * Mathf.Rad2Deg - 90f;
-        var angleAxisZClamped = Math.Clamp(angleAxisZ, clampValue[0], clampValue[1]);
-        if (angleAxisZ > clampEqualizer[0] && angleAxisZ < clampEqualizer[1])
+        float angleAxisZClamped;
+        if (angleAxisZ > clampValueDown[0] && angleAxisZ < clampValueDown[1])
         {
-            angleAxisZClamped = _playerView.IsFirstPlayer ? clampValue[1] : clampValue[0];
+            angleAxisZClamped = Math.Clamp(angleAxisZ, clampValueDown[0], clampValueDown[1]);
+            bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped + 180f);
+            return;
+        }
+        
+        angleAxisZClamped = Math.Clamp(angleAxisZ, clampValueUp[0], clampValueUp[1]); 
+        if (angleAxisZ > clampEqualizerUp[0] && angleAxisZ < clampValueDown[0])
+        {
+            angleAxisZClamped = _playerView.IsFirstPlayer ? clampValueUp[1] : clampValueUp[0];
         }
         bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
-
     }
 
     private void Move()

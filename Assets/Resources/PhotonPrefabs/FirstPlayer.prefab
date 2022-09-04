@@ -284,12 +284,18 @@ MonoBehaviour:
   bow: {fileID: 7595877042427305252}
   bowArrow: {fileID: 7595877042534779316}
   shootPosition: {fileID: 7595877042500595395}
-  clampValue:
+  clampValueUp:
   - -70
   - 70
-  clampEqualizer:
+  clampEqualizerUp:
   - -270
   - -185
+  clampValueDown:
+  - -240
+  - -120
+  clampEqualizerDown:
+  - 0
+  - 0
   playerFront: {fileID: 21300000, guid: 0f39a9205e4394ee1b6ba8269428d176, type: 3}
   playerSprite: {fileID: 5541331950743161490}
 --- !u!114 &3412043203624383086
