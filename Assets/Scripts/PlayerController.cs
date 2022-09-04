@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private void Aiming()
     {
         if (!_photonView.IsMine) return;
-        if (!_hasArrow) return;
+        //if (!_hasArrow) return;
         if (_playerInput.Player.Touch.phase != InputActionPhase.Performed) return;
         var mousePosition = _playerInput.Player.Aiming.ReadValue<Vector2>();
         var worldMousePosition = _mainCamera.ScreenToWorldPoint(mousePosition);
