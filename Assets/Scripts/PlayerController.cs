@@ -16,9 +16,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     [SerializeField] private SpriteRenderer bowArrow;
     [SerializeField] private Transform shootPosition;
     [SerializeField] private float[] clampValueUp;
-    [SerializeField] private float[] clampEqualizerUp;
+    [SerializeField] private float[] clampEqualizer;
     [SerializeField] private float[] clampValueDown;
-    [SerializeField] private float[] clampEqualizerDown;
     [SerializeField] private Sprite playerFront;
     [SerializeField] private GameObject playerSprite;
     private Transform _playerTransform;
@@ -155,7 +154,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         }
         
         angleAxisZClamped = Math.Clamp(angleAxisZ, clampValueUp[0], clampValueUp[1]); 
-        if (angleAxisZ > clampEqualizerUp[0] && angleAxisZ < clampValueDown[0])
+        if (angleAxisZ > clampEqualizer[0] && angleAxisZ < clampValueDown[0])
         {
             angleAxisZClamped = _playerView.IsFirstPlayer ? clampValueUp[1] : clampValueUp[0];
         }

@@ -287,15 +287,12 @@ MonoBehaviour:
   clampValueUp:
   - -70
   - 70
-  clampEqualizerUp:
+  clampEqualizer:
   - -270
   - -185
   clampValueDown:
   - -240
   - -120
-  clampEqualizerDown:
-  - 0
-  - 0
   playerFront: {fileID: 21300000, guid: 0f39a9205e4394ee1b6ba8269428d176, type: 3}
   playerSprite: {fileID: 5541331950743161490}
 --- !u!114 &3412043203624383086
