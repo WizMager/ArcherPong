@@ -1,6 +1,7 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
@@ -8,6 +9,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button join;
     [SerializeField] private Button create;
     [SerializeField] private GameObject connectionLabel;
+    [SerializeField] private Button bot;
     
     private void Start()
     {
@@ -19,6 +21,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         join.onClick.AddListener(JoinRoom);
         create.onClick.AddListener(CreateRoom);
+        bot.onClick.AddListener(BotGame);
         join.gameObject.SetActive(false);
         create.gameObject.SetActive(false);
     }
@@ -40,6 +43,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer) return;
         PhotonNetwork.JoinRandomRoom();
+    }
+    
+    private void BotGame()
+    {
+        SceneManager.LoadScene(2);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
