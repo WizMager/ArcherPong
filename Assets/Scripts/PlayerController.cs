@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.OnScreen;
 using Utils;
 using Views;
 
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private Quaternion _startRotation;
     private bool _stopMove;
     private SpriteRenderer _spriteRenderer;
+    private Transform _stickTransform;
 
     public Transform GetShootPosition => shootPosition;
 
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         FindObjectOfType<ScoreController>().AddPlayerController(this);
+        _stickTransform = FindObjectOfType<JoystickPositionView>().gameObject.transform;
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = _playerTransform.position;
         _startRotation = _playerTransform.rotation;
@@ -142,7 +145,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         if (_playerInput.Player.Touch.phase != InputActionPhase.Performed) return;
         var mousePosition = _playerInput.Player.Aiming.ReadValue<Vector2>();
         var worldMousePosition = _mainCamera.ScreenToWorldPoint(mousePosition);
-        var mouseDirection = worldMousePosition - _playerTransform.position;
+        var mouseDirection = worldMousePosition - _stickTransform.position;
         mouseDirection.Normalize();
         var angleAxisZ = Mathf.Atan2(mouseDirection.y, mouseDirection.x) * Mathf.Rad2Deg - 90f;
         float angleAxisZClamped;
