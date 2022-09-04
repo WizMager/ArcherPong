@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private Transform _stickTransform;
     private ShootlessPositionView _shootless;
     private bool _canShoot = true;
+    private bool _timeEnable;
+    private float _timeBeforeShoot;
 
     public Transform GetShootPosition => shootPosition;
 
@@ -84,6 +86,10 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private void ShootStateChanged(bool shootActivate)
     {
         _canShoot = shootActivate;
+        if (_timeEnable)
+        {
+            StartCoroutine(TimeBeforeShoot(_timeBeforeShoot)); 
+        }
     }
 
     public void SetStartPosition()
@@ -97,6 +103,12 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         _hasArrow = hasArrow;
         bowArrow.enabled = _hasArrow;
         if (!timer.timerEnable)return;
+        if (!_canShoot)
+        {
+            _timeBeforeShoot = timer.timeBeforeShoot;
+            _timeEnable = true;
+            return;
+        }
         StartCoroutine(TimeBeforeShoot(timer.timeBeforeShoot));
     }
 
@@ -107,6 +119,8 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
             yield return null;
         }
         Shoot(new InputAction.CallbackContext());
+        _timeEnable = false;
+        StopAllCoroutines();
     }
     
     private void WallEntered(Vector3 normal)
