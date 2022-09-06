@@ -14,6 +14,8 @@ public class SinglePlayerController : MonoBehaviour
     [SerializeField] private Transform shootPosition;
     [SerializeField] private float[] clampValue;
     [SerializeField] private float[] clampEqualizer;
+    [SerializeField] private ShootlessPositionView shootless;
+    [SerializeField] private Transform stickTransform;
     private Transform _playerTransform;
     private GameObject _wallColliders;
     private Camera _mainCamera;
@@ -23,8 +25,6 @@ public class SinglePlayerController : MonoBehaviour
     private Vector2 _startPosition;
     private Quaternion _startRotation;
     private bool _stopMove;
-    private Transform _stickTransform;
-    private ShootlessPositionView _shootless;
     private bool _canShoot = true;
     private bool _timeEnable;
     private float _timeBeforeShoot;
@@ -38,8 +38,6 @@ public class SinglePlayerController : MonoBehaviour
     
     private void Awake()
     {
-        _stickTransform = FindObjectOfType<JoystickPositionView>().gameObject.transform;
-        _shootless = FindObjectOfType<ShootlessPositionView>();
         _playerView = GetComponent<PlayerView>();
         _playerTransform = GetComponent<Transform>();
         _playerInput = new PlayerInput();
@@ -52,7 +50,7 @@ public class SinglePlayerController : MonoBehaviour
         _startPosition = _playerTransform.position;
         _startRotation = _playerTransform.rotation;
         _playerView.OnWallEnter += WallEntered;
-        _shootless.OnShootActivator += ShootStateChanged;
+        shootless.OnShootActivator += ShootStateChanged;
     }
 
     private void ShootStateChanged(bool shootActivate)
@@ -124,7 +122,7 @@ public class SinglePlayerController : MonoBehaviour
         if (_playerInput.Player.Touch.phase != InputActionPhase.Performed) return;
         var touchPosition = _playerInput.Player.Aiming.ReadValue<Vector2>();
         var worldTouchPosition = _mainCamera.ScreenToWorldPoint(touchPosition);
-        var direction = worldTouchPosition - _stickTransform.position;
+        var direction = worldTouchPosition - stickTransform.position;
         direction.Normalize();
         var angleAxisZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         var angleAxisZClamped = Math.Clamp(angleAxisZ, clampValue[0], clampValue[1]); 
