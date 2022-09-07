@@ -10646,6 +10646,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a82bf09edb7d49b98ef875c94eb9c46c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrow: {fileID: 2081064025}
+  botSpeed: 5
+  minimalDistanceToCalculate: 15
 --- !u!61 &8964489609785700795
 BoxCollider2D:
   m_ObjectHideFlags: 0

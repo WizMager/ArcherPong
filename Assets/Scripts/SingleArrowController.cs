@@ -82,6 +82,7 @@ public class SingleArrowController : MonoBehaviour
             _spriteRenderer.enabled = false;
             _rigidbody.velocity = Vector2.zero;
             _rigidbody.angularVelocity = 0;
+            botController.StopMove = true;
         }
         
         private void ArrowReflected(Vector2 normal, bool isBot)
@@ -131,16 +132,12 @@ public class SingleArrowController : MonoBehaviour
         {
             _spriteRenderer.enabled = true;
             _rigidbody.AddForce(_transform.up * _arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
+            botController.StopMove = false;
         }
 
         private void FixedUpdate()
         {
             _currentVelocity = _rigidbody.velocity;
-        }
-
-        private void OnDisable()
-        {
-            PhotonNetwork.RemoveCallbackTarget(this);
         }
 
         private void OnDestroy()
