@@ -64,5 +64,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         join.onClick.RemoveListener(JoinRoom);
         create.onClick.RemoveListener(CreateRoom);
+        bot.onClick.RemoveListener(BotGame);
     }
 }
