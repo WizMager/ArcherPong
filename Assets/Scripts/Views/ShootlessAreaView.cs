@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Views
 {
-    public class ShootlessPositionView : MonoBehaviour
+    public class ShootlessAreaView : MonoBehaviour
     {
         public Action<bool> OnShootActivator;
         private void OnTriggerEnter2D(Collider2D col)

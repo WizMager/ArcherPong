@@ -36,7 +36,7 @@ public class SingleArrowController : MonoBehaviour
             arrowView.OnCatch += ArrowCaught;
             arrowView.OnMiss += PlayerMissedArrow;
             //scoreController.OnStartNextRound += SetStartArrowMoveSpeed;
-            playerControllers.OnShoot += Shooted;
+            //playerControllers.OnShoot += Shooted;
             ArrowDisable();
         }
 
@@ -73,7 +73,7 @@ public class SingleArrowController : MonoBehaviour
         
         private void ArrowTake(bool withTimer)
         {
-            playerControllers.TakeArrow(true, withTimer ? (true, _timeBeforeShoot) : (false, _timeBeforeShoot));
+            //playerControllers.TakeArrow(true, withTimer ? (true, _timeBeforeShoot) : (false, _timeBeforeShoot));
             ArrowDisable();
         }
         
@@ -123,9 +123,9 @@ public class SingleArrowController : MonoBehaviour
 
         private void PrepareShootArrow()
         {
-            var shootPosition = playerControllers.GetShootPosition;
-            _transform.SetPositionAndRotation(shootPosition.position, shootPosition.rotation);
-            playerControllers.TakeArrow(false, (false, 0f));
+            //var shootPosition = playerControllers.GetShootPosition;
+            //_transform.SetPositionAndRotation(shootPosition.position, shootPosition.rotation);
+            //playerControllers.TakeArrow(false, (false, 0f));
         }
         
         private void ArrowEnable()
@@ -142,7 +142,7 @@ public class SingleArrowController : MonoBehaviour
 
         private void OnDestroy()
         {
-            playerControllers.OnShoot -= Shooted;
+            //playerControllers.OnShoot -= Shooted;
             Destroy(gameObject);
         }    
 }

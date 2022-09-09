@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a35a9753264071bceb7664c7a74caa, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 7595877040938180745, guid: b8c5bdbb9d0f8324e951680931ec4ccd, type: 3}
-  botPrefab: {fileID: 7084151371835269045, guid: e072307e691f7d44c969b34ae3592aa0, type: 3}
+  firstPlayerPrefab: {fileID: 0}
+  secondPlayerPrefab: {fileID: 0}
   playerMoveSpeed: 5
   spawnPositionFirst: {fileID: 695895039232687235, guid: c482a778fb6f0ef428e64614e58f5ea7, type: 3}
   spawnPositionSecond: {fileID: 3825565726648376696, guid: 88c0530c995b4f14aa9fd4c26ec55f99, type: 3}
+  clampValueFirstPlayer:
+  - 0
+  - 70
+  clamValueEqualizerFirstPlayer:
+  - -270
+  - -185
+  clampValueSecondPlayer:
+  - -240
+  - -120
+  clamValueEqualizerSecondPlayer:
+  - 0
+  - 90
