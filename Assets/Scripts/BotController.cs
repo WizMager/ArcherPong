@@ -1,23 +1,28 @@
-﻿using UnityEngine;
+﻿using Controllers.Interfaces;
+using Data;
+using UnityEngine;
 
-public class BotController : MonoBehaviour
+public class BotController : IExecute
 {
-    [SerializeField] private Transform arrow;
-    [SerializeField] private float botSpeed;
-    [SerializeField] private float minimalDistanceToCalculate;
-    private Transform _botTransform;
+    private readonly Transform _arrow;
+    private readonly float _botSpeed;
+    private readonly float _distanceToCalculateDirection;
+    private readonly Transform _botTransform;
     private bool _stopMove;
-    private Vector2 _startPosition;
-    private Quaternion _startRotation;
+    private readonly Vector2 _startPosition;
+    private readonly Quaternion _startRotation;
     
     public bool StopMove
     {
         set => _stopMove = value;
     }
 
-    private void Start()
+    public BotController(Transform bot, Transform arrow, BotData botData)
     {
-        _botTransform = GetComponent<Transform>();
+        _botTransform = bot;
+        _arrow = arrow;
+        _botSpeed = botData.botSpeed;
+        _distanceToCalculateDirection = botData.distanceToCalculateDirection;
         _startPosition = _botTransform.position;
         _startRotation = _botTransform.rotation;
     }
@@ -28,26 +33,26 @@ public class BotController : MonoBehaviour
         _botTransform.rotation = _startRotation;
     }
 
-    private void Update()
-    {
-        if (_stopMove) return;
-        var axisXChange = CalculateMoveDirection() * botSpeed * Time.deltaTime;
-        _botTransform.Translate(axisXChange, 0f, 0f);
-    }
-
     private float CalculateMoveDirection()
     {
-        var distanceToArrow = Vector2.Distance(_botTransform.position, arrow.position);
-        if (distanceToArrow > minimalDistanceToCalculate)
+        var distanceToArrow = Vector2.Distance(_botTransform.position, _arrow.position);
+        if (distanceToArrow > _distanceToCalculateDirection)
         {
             return 0;
         }
-        var directionToArrow = (arrow.position - _botTransform.position).normalized;
+        var directionToArrow = (_arrow.position - _botTransform.position).normalized;
         var angleBetweenDown = Mathf.Atan2(directionToArrow.y, directionToArrow.x) * Mathf.Rad2Deg + 90f;
         if (angleBetweenDown is > 90f or < -90f)
         {
             angleBetweenDown = 0;
         }
         return Mathf.Lerp(-1f, 1f, angleBetweenDown);;
+    }
+
+    public void Execute(float deltaTime)
+    {
+        if (_stopMove) return;
+        var axisXChange = CalculateMoveDirection() * _botSpeed * deltaTime;
+        _botTransform.Translate(axisXChange, 0f, 0f);
     }
 }
