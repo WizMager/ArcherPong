@@ -6,7 +6,6 @@ namespace Data
     public class PlayerData : ScriptableObject
     {
         public GameObject playerPrefab;
-        public GameObject botPrefab;
         public float playerMoveSpeed;
         public Transform spawnPositionFirst;
         public Transform spawnPositionSecond;

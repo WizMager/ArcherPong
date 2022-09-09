@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 204e9e1bd55e4f93a9af6468800d0845, type: 3}
-  m_Name: ArrowData
+  m_Script: {fileID: 11500000, guid: ff0acf68dd2244bca460d4bba8471eb0, type: 3}
+  m_Name: PrefabData
   m_EditorClassIdentifier: 
+  uiPrefab: {fileID: 4247158610699634944, guid: d2ed008a1e02a3846b56c784fe3e7d0c, type: 3}
+  botPrefab: {fileID: 4563074728000095915, guid: e072307e691f7d44c969b34ae3592aa0, type: 3}
   soloArrowPrefab: {fileID: 1107704138982592212, guid: f391da88489e37c4cbfd2c6cd3fa3c94, type: 3}
   networkArrowPrefab: {fileID: 8408665345107903063, guid: daaec01ae757ab64d8704ad63bfa9bd8, type: 3}
-  startArrowSpeed: 5
-  maxArrowSpeed: 15
-  arrowMoveSpeedMultiplyPercent: 20

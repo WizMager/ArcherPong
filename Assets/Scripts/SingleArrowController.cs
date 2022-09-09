@@ -35,7 +35,7 @@ public class SingleArrowController : MonoBehaviour
             arrowView.OnReflect += ArrowReflected;
             arrowView.OnCatch += ArrowCaught;
             arrowView.OnMiss += PlayerMissedArrow;
-            scoreController.OnStartNextRound += SetStartArrowMoveSpeed;
+            //scoreController.OnStartNextRound += SetStartArrowMoveSpeed;
             playerControllers.OnShoot += Shooted;
             ArrowDisable();
         }

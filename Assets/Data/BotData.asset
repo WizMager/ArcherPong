@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42dccfe32d8f4f7193ebafcf624a3b3f, type: 3}
   m_Name: BotData
   m_EditorClassIdentifier: 
-  botPrefab: {fileID: 7084151371835269045, guid: e072307e691f7d44c969b34ae3592aa0, type: 3}
+  botPrefab: {fileID: 4563074728000095915, guid: e072307e691f7d44c969b34ae3592aa0, type: 3}
+  spawnPoint: {fileID: 3825565726648376696, guid: 88c0530c995b4f14aa9fd4c26ec55f99, type: 3}
   botSpeed: 5
   distanceToCalculateDirection: 15

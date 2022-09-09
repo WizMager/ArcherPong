@@ -1,79 +1,39 @@
 ﻿using System;
-using System.Collections;
-using TMPro;
-using UnityEngine;
+using Controllers.Interfaces;
+using Data;
+using Model;
+using Views;
 
-public class SingleScoreController : MonoBehaviour
+public class SingleScoreController : ICleanup
 {
-    public Action OnStartNextRound;
-    [SerializeField] private TMP_Text firstPlayerScore;
-    [SerializeField] private TMP_Text secondPlayerScore;
-    [SerializeField] private TMP_Text winLabel;
-    [SerializeField] private int winScoreLimit;
-    [SerializeField] private float watchScoreTime;
-    [SerializeField] private SingleArrowController arrowController;
-    [SerializeField] private SinglePlayerController playerControllers;
-    [SerializeField] private BotController botController;
-    private int _firstPlayer;
-    private int _secondPlayer;
+    public Action<bool> OnStopCharacters;
+    private SingleArrowController _arrowController;
+    private readonly ScoreModel _scoreModel;
 
-    private void Start()
+    public SingleScoreController(UIView uiView, ScoreData scoreData)
     {
-        winLabel.enabled = false;
-        arrowController.OnPlayerMiss += ArrowMissed;
+        _scoreModel = new ScoreModel(uiView, scoreData);
+        _scoreModel.OnStopGame += GameStopped;
+    }
+
+    public void TakeArrowController(SingleArrowController arrowController)
+    {
+        _arrowController = arrowController;
+        _arrowController.OnPlayerMiss += ArrowMissed;
     }
     
+    private void GameStopped(bool isStop)
+    {
+        OnStopCharacters?.Invoke(isStop);
+    }
     
     private void ArrowMissed(bool isFirstPlayer)
     {
-        if (isFirstPlayer)
-        {
-            _secondPlayer++;
-            secondPlayerScore.text = _secondPlayer.ToString();
-        }
-        else
-        {
-            _firstPlayer++;
-            firstPlayerScore.text = _firstPlayer.ToString();
-        }
-        
-        if (_firstPlayer < winScoreLimit && _secondPlayer < winScoreLimit) return;
-        var winText = _firstPlayer > _secondPlayer ? "First Player\n Win!" : "Second Player\n Win!";
-        WatchWinScore(winText);
-        StartCoroutine(WatchScoreTimer());
+        _scoreModel.ChangeScore(isFirstPlayer);
     }
 
-    private void WatchWinScore(string winText)
+    public void Cleanup()
     {
-        playerControllers.StopMove = true;
-        botController.StopMove = true;
-        winLabel.enabled = true;
-        winLabel.text = winText;
+        _arrowController.OnPlayerMiss -= ArrowMissed;
     }
-
-    private void StopWatchWinScore()
-    {
-        _firstPlayer = 0;
-        _secondPlayer = 0;
-        firstPlayerScore.text = _firstPlayer.ToString();
-        secondPlayerScore.text = _secondPlayer.ToString();
-        winLabel.enabled = false;
-        playerControllers.StopMove = false;
-        botController.StopMove = false;
-    }
-    
-    private IEnumerator WatchScoreTimer()
-    {
-        for (float i = 0; i < watchScoreTime; i += Time.deltaTime)
-        {
-            yield return null;
-        }
-        StopWatchWinScore();
-        OnStartNextRound?.Invoke();
-    }
-
-    private void OnDestroy()
-    {
-        arrowController.OnPlayerMiss -= ArrowMissed;
-    }      
 }

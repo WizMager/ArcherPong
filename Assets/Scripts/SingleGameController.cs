@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class SingleGameController : MonoBehaviour
 {
     [SerializeField] private Data.Data data;
     private Controllers.Controllers _controllers;
 
     private void Awake()
     {
-        //_controllers = new Controllers.Controllers();
-        new GameInitialization(_controllers, data);
+        _controllers = new Controllers.Controllers();
+        new SingleGameInitialization(_controllers, data);
         _controllers.Awake();
     }
 

@@ -15,3 +15,5 @@ MonoBehaviour:
   playerData: {fileID: 11400000, guid: c52d437d3a68f284a8640a8c501e18a3, type: 2}
   arrowData: {fileID: 11400000, guid: f04d05c32fcaefa4aa241149c5f52452, type: 2}
   scoreData: {fileID: 11400000, guid: 51a7f2c4b262ef442a4e2ddbd47ba9ec, type: 2}
+  botData: {fileID: 11400000, guid: 6a9a7691b5a99464f95069f4363e69c0, type: 2}
+  prefabData: {fileID: 11400000, guid: 181dadf283b82aa4ba814b8e8665b963, type: 2}

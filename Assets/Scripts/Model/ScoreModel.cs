@@ -1,18 +1,26 @@
-﻿using Views;
+﻿using System;
+using System.Collections;
+using Data;
+using UnityEngine;
+using Views;
 
 namespace Model
 {
     public class ScoreModel
     {
-        private FirstPlayerScoreView _firstPlayer;
-        private SecondPlayerScoreView _secondPlayer;
+        public Action<bool> OnStopGame;
+        private readonly UIView _uiView;
         private int _firstPlayerScore;
         private int _secondPlayerScore;
+        private readonly int _winScoreLimit;
+        private readonly float _watchScoreTime;
 
-        public ScoreModel(FirstPlayerScoreView firstPlayerScoreView, SecondPlayerScoreView secondPlayerScoreView)
+        public ScoreModel(UIView uiView, ScoreData scoreData)
         {
-            _firstPlayer = firstPlayerScoreView;
-            _secondPlayer = secondPlayerScoreView;
+            _uiView = uiView;
+            _winScoreLimit = scoreData.winScoreLimit;
+            _watchScoreTime = scoreData.watchScoreTime;
+            _uiView.WinTextActivation(false);
         }
 
         public void ChangeScore(bool isFirstPlayer)
@@ -20,13 +28,30 @@ namespace Model
             if (isFirstPlayer)
             {
                 _secondPlayerScore++;
-                _secondPlayer.SetScoreText(_secondPlayerScore);
+                _uiView.SetSecondPlayerScore(_secondPlayerScore.ToString());
             }
             else
             {
                 _firstPlayerScore++;
-                _firstPlayer.SetScoreText(_firstPlayerScore);
+                _uiView.SetFirstPlayerScore(_firstPlayerScore.ToString());
             }
+
+            if (_firstPlayerScore < _winScoreLimit && _secondPlayerScore < _winScoreLimit) return;
+            OnStopGame?.Invoke(true);
+            _uiView.WinTextActivation(true);
+            _uiView.SetWinText(_firstPlayerScore > _secondPlayerScore ? "First Player\n Win!" : "Second Player\n Win!");
+            _uiView.StartCoroutine(WatchScoreTimer());
+        }
+        
+        private IEnumerator WatchScoreTimer()
+        {
+            for (float i = 0; i < _watchScoreTime; i += Time.deltaTime)
+            {
+                yield return null;
+            }
+            _uiView.WinTextActivation(false);
+            OnStopGame?.Invoke(false);
+            _uiView.StopCoroutine(WatchScoreTimer());
         }
     }
 }

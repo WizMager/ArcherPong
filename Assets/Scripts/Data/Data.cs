@@ -10,6 +10,7 @@ namespace Data
         [SerializeField] private ArrowData arrowData;
         [SerializeField] private ScoreData scoreData;
         [SerializeField] private BotData botData;
+        [SerializeField] private PrefabData prefabData;
 
         public PlayerData GetPlayerData
         {
@@ -56,6 +57,18 @@ namespace Data
                     return botData;
                 }
                 throw new ArgumentNullException("BotData is null.");
+            }
+        }
+        
+        public PrefabData GetPrefabData
+        {
+            get
+            {
+                if (prefabData != null)
+                {
+                    return prefabData;
+                }
+                throw new ArgumentNullException("PrefabData is null.");
             }
         }
     }
