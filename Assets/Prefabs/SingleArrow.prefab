@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1107704138982592223}
   - component: {fileID: 1107704138982592208}
   - component: {fileID: 1107704138982592209}
-  - component: {fileID: 1107704138982592211}
   - component: {fileID: 1107704138982592221}
   m_Layer: 6
   m_Name: SingleArrow
@@ -125,28 +124,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.05, y: 0.19}
   m_Direction: 0
---- !u!114 &1107704138982592211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107704138982592212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97bf8d75fa6b429aaa562b0e05e8dfdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startArrowMoveSpeed: 5
-  maxArrowMoveSpeed: 10
-  setStartPositionAfterMissArrow: 1
-  arrowMoveSpeedMultiply: 20
-  scoreController: {fileID: 0}
-  startTimeBeforeShoot: 3
-  minimalTimeBeforeShoot: 1
-  timeBeforeShootMultiply: 20
-  arrowView: {fileID: 1107704138982592221}
-  playerControllers: {fileID: 0}
 --- !u!114 &1107704138982592221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,3 +136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae54e281ec124feb980856090000a572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowRigidbody: {fileID: 1107704138982592208}
+  arrowTransform: {fileID: 1107704138982592222}
+  spriteRenderer: {fileID: 1107704138982592223}

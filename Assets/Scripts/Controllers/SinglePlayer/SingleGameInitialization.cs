@@ -27,17 +27,19 @@ namespace Controllers.SinglePlayer
             var shootController = new SinglePlayerShootController(mainCamera.GetComponent<Camera>(), environmentView.GetShootlessAreaView, environmentView.GetJoystickPosition, playerView, arrowView, playerData);
             var moveController = new SinglePlayerMoveController(playerView, playerData.playerMoveSpeed,
                 environmentView.GetShootlessAreaView, arrowView);
+            var arrowController = new SingleArrowController(arrowView, arrowData, playerView.GetShootPosition);
             
             botController.Init(scoreController);
-            //scoreController.Init();
             shootController.Init(scoreController);
             moveController.Init(shootController, scoreController);
+            arrowController.Init(shootController, scoreController);
             
 
             controllers.Add(botController);
             controllers.Add(scoreController);
             controllers.Add(shootController);
             controllers.Add(moveController);
+            controllers.Add(arrowController);
         }
     }
 }

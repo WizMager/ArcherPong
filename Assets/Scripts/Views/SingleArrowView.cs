@@ -9,6 +9,13 @@ namespace Views
         public Action<bool> OnMiss;
         public Action<Vector2, bool> OnReflect;
         public Action OnCatch;
+        [SerializeField] private Rigidbody2D arrowRigidbody;
+        [SerializeField] private Transform arrowTransform;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+
+        public Rigidbody2D GetRigidbody => arrowRigidbody;
+        public Transform GetTransform => arrowTransform;
+        public SpriteRenderer GetSpriteRenderer => spriteRenderer;
 
         private void OnCollisionEnter2D(Collision2D col)
         {
