@@ -5,11 +5,9 @@ using Views;
 
 public class SingleArrowController : MonoBehaviour
 {
-        public Action<bool> OnPlayerMiss;
-        [SerializeField] private float startArrowMoveSpeed;
-        [SerializeField] private float maxArrowMoveSpeed;
-        [SerializeField] private bool setStartPositionAfterMissArrow;
-        [SerializeField] private int arrowMoveSpeedMultiply;
+        private float _startArrowMoveSpeed;
+        private float _maxArrowMoveSpeed;
+        private int _arrowMoveSpeedMultiply;
         [SerializeField] private SingleScoreController scoreController;
         [SerializeField] private SingleArrowView arrowView;
         [SerializeField] private SinglePlayerMoveController playerMoveControllers;
@@ -41,7 +39,7 @@ public class SingleArrowController : MonoBehaviour
 
         private void SetStartArrowMoveSpeed()
         {
-            _arrowMoveSpeed = startArrowMoveSpeed;
+            _arrowMoveSpeed = _startArrowMoveSpeed;
         }
     
         
@@ -52,8 +50,8 @@ public class SingleArrowController : MonoBehaviour
 
         private void AddArrowSpeed()
         {
-            if (_arrowMoveSpeed > maxArrowMoveSpeed)return;
-            _arrowMoveSpeed += _arrowMoveSpeed / 100 * arrowMoveSpeedMultiply;
+            if (_arrowMoveSpeed > _maxArrowMoveSpeed)return;
+            _arrowMoveSpeed += _arrowMoveSpeed / 100 * _arrowMoveSpeedMultiply;
         }
 
         private void ArrowDisable()

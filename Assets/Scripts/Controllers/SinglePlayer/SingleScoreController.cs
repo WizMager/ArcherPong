@@ -9,21 +9,18 @@ namespace Controllers.SinglePlayer
     public class SingleScoreController : ICleanup
     {
         public Action<bool> OnGamePause;
-        private SingleArrowController _arrowController;
         private readonly ScoreModel _scoreModel;
+        private readonly SingleArrowView _arrowView;
 
-        public SingleScoreController(UIView uiView, ScoreData scoreData)
+        public SingleScoreController(UIView uiView, ScoreData scoreData, SingleArrowView arrowView)
         {
             _scoreModel = new ScoreModel(uiView, scoreData);
+            _arrowView = arrowView;
+            
             _scoreModel.OnStopGame += GameStopped;
+            _arrowView.OnMiss += ArrowMissed;
         }
 
-        public void Init(SingleArrowController arrowController)
-        {
-            _arrowController = arrowController;
-            _arrowController.OnPlayerMiss += ArrowMissed;
-        }
-    
         private void GameStopped(bool isStop)
         {
             OnGamePause?.Invoke(isStop);
@@ -37,7 +34,7 @@ namespace Controllers.SinglePlayer
         public void Cleanup()
         {
             _scoreModel.OnStopGame -= GameStopped;
-            _arrowController.OnPlayerMiss -= ArrowMissed;
+            _arrowView.OnMiss -= ArrowMissed;
         }
     }
 }

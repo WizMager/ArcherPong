@@ -23,7 +23,7 @@ namespace Controllers.SinglePlayer
                 playerData.spawnPositionFirst.rotation).GetComponent<PlayerView>();
             
             var botController = new BotController(bot.transform, arrow.transform, botData, arrowView);
-            var scoreController = new SingleScoreController(ui.GetComponent<UIView>(), scoreData);
+            var scoreController = new SingleScoreController(ui.GetComponent<UIView>(), scoreData, arrowView);
             var shootController = new SinglePlayerShootController(mainCamera.GetComponent<Camera>(), environmentView.GetShootlessAreaView, environmentView.GetJoystickPosition, playerView, arrowView, playerData);
             var moveController = new SinglePlayerMoveController(playerView, playerData.playerMoveSpeed,
                 environmentView.GetShootlessAreaView, arrowView);
