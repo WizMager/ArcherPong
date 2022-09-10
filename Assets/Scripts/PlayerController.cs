@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         {
             if (!PhotonNetwork.IsMasterClient)
             {
-                _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
+                //_wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
                 _mainCamera.transform.Rotate(0, 0, 180f);
                 _wallColliders.transform.Rotate(0, 0, 180f);
             }

@@ -181,7 +181,6 @@ GameObject:
   - component: {fileID: 7595877040938180750}
   - component: {fileID: 2200367117723274687}
   - component: {fileID: 3412043203624383086}
-  - component: {fileID: -2715685248274515302}
   m_Layer: 0
   m_Name: SinglePlayer
   m_TagString: Player
@@ -280,28 +279,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstPlayer: 1
---- !u!114 &-2715685248274515302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7595877040938180745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa27769708a4b22b10e0a22d24ba806, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerMoveSpeed: 5
-  bow: {fileID: 7595877042427305252}
-  bowArrow: {fileID: 7595877042534779316}
-  shootPosition: {fileID: 7595877042500595395}
-  clampValue:
-  - -70
-  - 70
-  clampEqualizer:
-  - -270
-  - -185
 --- !u!1 &7595877041787477603
 GameObject:
   m_ObjectHideFlags: 0

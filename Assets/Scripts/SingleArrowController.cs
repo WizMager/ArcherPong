@@ -1,5 +1,4 @@
 ﻿using System;
-using Photon.Pun;
 using UnityEngine;
 using Views;
 
@@ -11,24 +10,23 @@ public class SingleArrowController : MonoBehaviour
         [SerializeField] private bool setStartPositionAfterMissArrow;
         [SerializeField] private int arrowMoveSpeedMultiply;
         [SerializeField] private SingleScoreController scoreController;
-        [SerializeField] private float startTimeBeforeShoot;
-        [SerializeField] private float minimalTimeBeforeShoot;
-        [SerializeField] private int timeBeforeShootMultiply;
         [SerializeField] private SingleArrowView arrowView;
-        [SerializeField] private SinglePlayerController playerControllers;
+        [SerializeField] private SinglePlayerMoveController playerMoveControllers;
         [SerializeField] private BotController botController;
         private Rigidbody2D _rigidbody;
         private Transform _transform;
         private SpriteRenderer _spriteRenderer;
         private Vector2 _currentVelocity;
-        
         private float _arrowMoveSpeed;
-        private float _timeBeforeShoot;
 
+        public SingleArrowController(SingleArrowController arrowController)
+        {
+            
+        }
+        
         private void Start()
         {
             SetStartArrowMoveSpeed();
-            SetStartTimeBeforeShoot();
             _rigidbody = GetComponent<Rigidbody2D>();
             _transform = GetComponent<Transform>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -44,16 +42,10 @@ public class SingleArrowController : MonoBehaviour
         {
             _arrowMoveSpeed = startArrowMoveSpeed;
         }
-
-        private void SetStartTimeBeforeShoot()
-        {
-            _timeBeforeShoot = startTimeBeforeShoot;
-        }
+    
         
         private void ArrowCaught()
         {
-            RemoveTimeBeforeShoot();
-            ArrowTake(true);
             AddArrowSpeed();
         }
 
@@ -63,26 +55,11 @@ public class SingleArrowController : MonoBehaviour
             _arrowMoveSpeed += _arrowMoveSpeed / 100 * arrowMoveSpeedMultiply;
         }
 
-        private void RemoveTimeBeforeShoot()
-        {
-            if (_timeBeforeShoot > minimalTimeBeforeShoot)
-            {
-                _timeBeforeShoot -= _timeBeforeShoot / 100 * timeBeforeShootMultiply;
-            }
-        }
-        
-        private void ArrowTake(bool withTimer)
-        {
-            //playerControllers.TakeArrow(true, withTimer ? (true, _timeBeforeShoot) : (false, _timeBeforeShoot));
-            ArrowDisable();
-        }
-        
         private void ArrowDisable()
         {
             _spriteRenderer.enabled = false;
             _rigidbody.velocity = Vector2.zero;
             _rigidbody.angularVelocity = 0;
-            botController.StopMove = true;
         }
         
         private void ArrowReflected(Vector2 normal, bool isBot)
@@ -90,7 +67,6 @@ public class SingleArrowController : MonoBehaviour
             if (isBot)
             {
                 AddArrowSpeed();
-                RemoveTimeBeforeShoot();
             }
             var direction = Vector2.Reflect(_currentVelocity.normalized, normal);
             _rigidbody.velocity = direction * _arrowMoveSpeed;
@@ -99,21 +75,10 @@ public class SingleArrowController : MonoBehaviour
 
         private void PlayerMissedArrow(bool isFirstPlayer)
         {
-            if (setStartPositionAfterMissArrow)
-            {
-                SetStartPosition(); 
-            }
-            OnPlayerMiss?.Invoke(isFirstPlayer);
             SetStartArrowMoveSpeed();
-            SetStartTimeBeforeShoot();
-            ArrowTake(false); 
+            ArrowDisable();
         }
-
-        private void SetStartPosition()
-        {
-            playerControllers.SetStartPosition();
-            botController.SetStartPosition();
-        }
+        
 
         private void Shooted()
         {
@@ -132,7 +97,6 @@ public class SingleArrowController : MonoBehaviour
         {
             _spriteRenderer.enabled = true;
             _rigidbody.AddForce(_transform.up * _arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
-            botController.StopMove = false;
         }
 
         private void FixedUpdate()

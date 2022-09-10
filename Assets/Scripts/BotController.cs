@@ -1,33 +1,51 @@
 ﻿using Controllers.Interfaces;
 using Data;
 using UnityEngine;
+using Views;
 
-public class BotController : IExecute
+public class BotController : IExecute, ILateExecute, ICleanup
 {
+    private readonly Transform _botTransform;
     private readonly Transform _arrow;
     private readonly float _botSpeed;
     private readonly float _distanceToCalculateDirection;
-    private readonly Transform _botTransform;
-    private bool _stopMove;
+    private readonly SingleArrowView _arrowView;
     private readonly Vector2 _startPosition;
     private readonly Quaternion _startRotation;
-    
-    public bool StopMove
-    {
-        set => _stopMove = value;
-    }
+    private SingleScoreController _scoreController;
+    private float _calculatedHorizontalDirection;
+    private bool _isStopMove;
 
-    public BotController(Transform bot, Transform arrow, BotData botData)
+    public BotController(Transform bot, Transform arrow, BotData botData, SingleArrowView arrowView)
     {
         _botTransform = bot;
         _arrow = arrow;
         _botSpeed = botData.botSpeed;
         _distanceToCalculateDirection = botData.distanceToCalculateDirection;
+        _arrowView = arrowView;
         _startPosition = _botTransform.position;
         _startRotation = _botTransform.rotation;
+
+        _arrowView.OnMiss += OnMissed;
     }
 
-    public void SetStartPosition()
+    public void Init(SingleScoreController scoreController)
+    {
+        _scoreController = scoreController;
+        _scoreController.OnGamePause += MoveStopper;
+    }
+
+    private void OnMissed(bool isFirstPlayer)
+    {
+        ReturnToStartPosition();
+    }
+    
+    private void MoveStopper(bool isStopMove)
+    {
+        _isStopMove = isStopMove;
+    }
+
+    public void ReturnToStartPosition()
     {
         _botTransform.position = _startPosition;
         _botTransform.rotation = _startRotation;
@@ -51,8 +69,19 @@ public class BotController : IExecute
 
     public void Execute(float deltaTime)
     {
-        if (_stopMove) return;
-        var axisXChange = CalculateMoveDirection() * _botSpeed * deltaTime;
+        if (_isStopMove) return;
+        var axisXChange = _calculatedHorizontalDirection * _botSpeed * deltaTime;
         _botTransform.Translate(axisXChange, 0f, 0f);
+    }
+
+    public void LateExecute(float deltaTime)
+    {
+        _calculatedHorizontalDirection = CalculateMoveDirection();
+    }
+
+    public void Cleanup()
+    {
+        _arrowView.OnMiss -= OnMissed;
+        _scoreController.OnGamePause -= MoveStopper;
     }
 }

@@ -6,7 +6,7 @@ using Views;
 
 public class SingleScoreController : ICleanup
 {
-    public Action<bool> OnStopCharacters;
+    public Action<bool> OnGamePause;
     private SingleArrowController _arrowController;
     private readonly ScoreModel _scoreModel;
 
@@ -16,7 +16,7 @@ public class SingleScoreController : ICleanup
         _scoreModel.OnStopGame += GameStopped;
     }
 
-    public void TakeArrowController(SingleArrowController arrowController)
+    public void Init(SingleArrowController arrowController)
     {
         _arrowController = arrowController;
         _arrowController.OnPlayerMiss += ArrowMissed;
@@ -24,7 +24,7 @@ public class SingleScoreController : ICleanup
     
     private void GameStopped(bool isStop)
     {
-        OnStopCharacters?.Invoke(isStop);
+        OnGamePause?.Invoke(isStop);
     }
     
     private void ArrowMissed(bool isFirstPlayer)
@@ -34,6 +34,7 @@ public class SingleScoreController : ICleanup
 
     public void Cleanup()
     {
+        _scoreModel.OnStopGame -= GameStopped;
         _arrowController.OnPlayerMiss -= ArrowMissed;
     }
 }
