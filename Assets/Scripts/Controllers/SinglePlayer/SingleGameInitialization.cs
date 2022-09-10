@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using Views;
 
-public class SingleGameInitialization
+namespace Controllers.SinglePlayer
 {
-        public SingleGameInitialization(Controllers.Controllers controllers, Data.Data data)
+    public class SingleGameInitialization
+    {
+        public SingleGameInitialization(Controllers controllers, Data.Data data)
         {
             var botData = data.GetBotData;
             var arrowData = data.GetArrowData;
@@ -22,15 +24,20 @@ public class SingleGameInitialization
             
             var botController = new BotController(bot.transform, arrow.transform, botData, arrowView);
             var scoreController = new SingleScoreController(ui.GetComponent<UIView>(), scoreData);
-            var shootController = new SinglePlayerShootController(mainCamera.GetComponent<Camera>(), environmentView.GetShootlessAreaView, environmentView.GetJoystickPosition, playerView, arrowView, playerData); 
+            var shootController = new SinglePlayerShootController(mainCamera.GetComponent<Camera>(), environmentView.GetShootlessAreaView, environmentView.GetJoystickPosition, playerView, arrowView, playerData);
+            var moveController = new SinglePlayerMoveController(playerView, playerData.playerMoveSpeed,
+                environmentView.GetShootlessAreaView, arrowView);
             
             botController.Init(scoreController);
             //scoreController.Init();
             shootController.Init(scoreController);
+            moveController.Init(shootController, scoreController);
             
 
             controllers.Add(botController);
             controllers.Add(scoreController);
             controllers.Add(shootController);
+            controllers.Add(moveController);
         }
+    }
 }
