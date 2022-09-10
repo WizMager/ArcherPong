@@ -1,5 +1,4 @@
 ﻿using System;
-using Controllers.SinglePlayer;
 using UnityEngine;
 
 namespace Views
@@ -30,9 +29,13 @@ namespace Views
                 }
                 else
                 {
-                    var isBot = col.gameObject.GetComponent<BotController>() != null;
-                    OnReflect?.Invoke(col.contacts[0].normal, isBot);
+                    OnReflect?.Invoke(col.contacts[0].normal, false);
                 }
+            }
+
+            if (colliderTag == "Bot")
+            {
+                OnReflect?.Invoke(col.contacts[0].normal, true);
             }
 
             if (colliderTag == "Player")

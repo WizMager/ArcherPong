@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         FindObjectOfType<ScoreController>().AddPlayerController(this);
-        _stickTransform = FindObjectOfType<JoystickPositionView>().gameObject.transform;
+        //_stickTransform = FindObjectOfType<JoystickPositionView>().gameObject.transform;
         _shootless = FindObjectOfType<ShootlessAreaView>();
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = _playerTransform.position;

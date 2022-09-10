@@ -1,5 +1,7 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Views
@@ -11,7 +13,15 @@ namespace Views
         [SerializeField] private TMP_Text winLabel;
         [SerializeField] private Button leave;
 
-        public Button GetLeaveButton => leave;
+        private void Start()
+        {
+            leave.onClick.AddListener(LeftRoom);
+        }
+
+        private void LeftRoom()
+        {
+            SceneManager.LoadScene(0);
+        }
 
         public void WinTextActivation(bool isActivate)
         {
@@ -20,17 +30,22 @@ namespace Views
         
         public void SetFirstPlayerScore(string scoreString)
         {
-            
+            firstPlayerScore.text = scoreString;
         }
 
         public void SetSecondPlayerScore(string scoreString)
         {
-            
+            secondPlayerScore.text = scoreString;
         }
 
         public void SetWinText(string winText)
         {
-            
+            winLabel.text = winText;
+        }
+
+        private void OnDestroy()
+        {
+            leave.onClick.RemoveListener(LeftRoom);
         }
     }
 }

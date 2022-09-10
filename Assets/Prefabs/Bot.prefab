@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4563074728000095926}
   m_Layer: 0
   m_Name: Bot
-  m_TagString: Wall
+  m_TagString: Bot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,6 +100,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstPlayer: 0
+  bow: {fileID: 0}
+  bowArrow: {fileID: 0}
+  shootPosition: {fileID: 0}
 --- !u!61 &4563074728000095927
 BoxCollider2D:
   m_ObjectHideFlags: 0

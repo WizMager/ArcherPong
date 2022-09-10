@@ -16,7 +16,7 @@ MonoBehaviour:
   spawnPositionFirst: {fileID: 695895039232687235, guid: c482a778fb6f0ef428e64614e58f5ea7, type: 3}
   spawnPositionSecond: {fileID: 3825565726648376696, guid: 88c0530c995b4f14aa9fd4c26ec55f99, type: 3}
   clampValueFirstPlayer:
-  - 0
+  - -70
   - 70
   clamValueEqualizerFirstPlayer:
   - -270

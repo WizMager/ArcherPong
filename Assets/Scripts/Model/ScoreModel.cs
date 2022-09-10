@@ -39,8 +39,12 @@ namespace Model
             if (_firstPlayerScore < _winScoreLimit && _secondPlayerScore < _winScoreLimit) return;
             OnStopGame?.Invoke(true);
             _uiView.WinTextActivation(true);
-            _uiView.SetWinText(_firstPlayerScore > _secondPlayerScore ? "First Player\n Win!" : "Second Player\n Win!");
+            _uiView.SetWinText(_firstPlayerScore > _secondPlayerScore ? "First Player\n Win!" : "Bot\n Win!");
             _uiView.StartCoroutine(WatchScoreTimer());
+            _firstPlayerScore = 0;
+            _secondPlayerScore = 0;
+            _uiView.SetFirstPlayerScore(_firstPlayerScore.ToString());
+            _uiView.SetSecondPlayerScore(_secondPlayerScore.ToString());
         }
         
         private IEnumerator WatchScoreTimer()

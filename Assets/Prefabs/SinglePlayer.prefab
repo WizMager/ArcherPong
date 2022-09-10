@@ -170,6 +170,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstPlayer: 1
+  bow: {fileID: 2018520686895379430}
+  bowArrow: {fileID: 2018520687002855286}
+  shootPosition: {fileID: 2018520687102869505}
 --- !u!1 &2018520686895379431
 GameObject:
   m_ObjectHideFlags: 0

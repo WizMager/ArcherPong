@@ -17,24 +17,24 @@ namespace Controllers.SinglePlayer
             _scoreModel = new ScoreModel(uiView, scoreData);
             _arrowView = arrowView;
             
-            _scoreModel.OnStopGame += GameStopped;
-            _arrowView.OnMiss += ArrowMissed;
+            _scoreModel.OnStopGame += OnStopGameHandler;
+            _arrowView.OnMiss += OnMissHandler;
         }
 
-        private void GameStopped(bool isStop)
+        private void OnStopGameHandler(bool isStop)
         {
             OnGamePause?.Invoke(isStop);
         }
     
-        private void ArrowMissed(bool isFirstPlayer)
+        private void OnMissHandler(bool isFirstPlayer)
         {
             _scoreModel.ChangeScore(isFirstPlayer);
         }
 
         public void Cleanup()
         {
-            _scoreModel.OnStopGame -= GameStopped;
-            _arrowView.OnMiss -= ArrowMissed;
+            _scoreModel.OnStopGame -= OnStopGameHandler;
+            _arrowView.OnMiss -= OnMissHandler;
         }
     }
 }

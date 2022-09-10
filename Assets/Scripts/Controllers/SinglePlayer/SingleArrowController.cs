@@ -33,9 +33,9 @@ namespace Controllers.SinglePlayer
             _shootPosition = playerShootPosition;
             SetStartArrowMoveSpeed();
             
-            _arrowView.OnReflect += ArrowReflected;
-            _arrowView.OnCatch += ArrowCaught;
-            _arrowView.OnMiss += PlayerMissedArrow;
+            _arrowView.OnReflect += OnReflectHandler;
+            _arrowView.OnCatch += CatchHandler;
+            _arrowView.OnMiss += OnMissHandler;
         }
 
         public void Init(SinglePlayerShootController shootController, SingleScoreController scoreController)
@@ -43,11 +43,11 @@ namespace Controllers.SinglePlayer
             _shootController = shootController;
             _scoreController = scoreController;
             
-            _shootController.OnShoot += Shooted;
-            _scoreController.OnGamePause += RoundEnded;
+            _shootController.OnShoot += OnShootHandler;
+            _scoreController.OnGamePause += OnGamePauseHandler;
         }
 
-        private void ArrowReflected(Vector2 normal, bool isBot)
+        private void OnReflectHandler(Vector2 normal, bool isBot)
         {
             if (isBot)
             {
@@ -58,24 +58,25 @@ namespace Controllers.SinglePlayer
             _transform.rotation = Quaternion.FromToRotation(_transform.up, direction) * _transform.rotation;
         }
         
-        private void ArrowCaught()
+        private void CatchHandler()
         {
             AddArrowSpeed();
+            ArrowDisable();
         }
         
-        private void PlayerMissedArrow(bool isFirstPlayer)
+        private void OnMissHandler(bool isFirstPlayer)
         {
             SetStartArrowMoveSpeed();
             ArrowDisable();
         }
         
-        private void Shooted()
+        private void OnShootHandler()
         {
             _transform.SetPositionAndRotation(_shootPosition.position, _shootPosition.rotation);
             ArrowEnable();
         }
         
-        private void RoundEnded(bool isPause)
+        private void OnGamePauseHandler(bool isPause)
         {
             if (!isPause) return;
             SetStartArrowMoveSpeed();
@@ -117,11 +118,11 @@ namespace Controllers.SinglePlayer
 
         public void Cleanup()
         {
-            _arrowView.OnReflect -= ArrowReflected;
-            _arrowView.OnCatch -= ArrowCaught;
-            _arrowView.OnMiss -= PlayerMissedArrow;
-            _shootController.OnShoot -= Shooted;
-            _scoreController.OnGamePause -= RoundEnded;
+            _arrowView.OnReflect -= OnReflectHandler;
+            _arrowView.OnCatch -= CatchHandler;
+            _arrowView.OnMiss -= OnMissHandler;
+            _shootController.OnShoot -= OnShootHandler;
+            _scoreController.OnGamePause -= OnGamePauseHandler;
         }
     }
 }

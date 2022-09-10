@@ -15,7 +15,7 @@ namespace Controllers.SinglePlayer
         private readonly ShootlessAreaView _shootlessArea;
         private readonly Transform _stickPosition;
         private readonly SingleArrowView _arrowView;
-        private readonly Transform _bowBody;
+        private readonly Transform _bow;
         private readonly SpriteRenderer _bowArrow;
         private readonly float[] _clampValue;
         private readonly float[] _clampEqualizer;
@@ -36,48 +36,49 @@ namespace Controllers.SinglePlayer
             _shootlessArea = shootlessAreaView;
             _stickPosition = stickPosition;
             _arrowView = arrowView;
-            _bowBody = playerView.GetBowBody;
+            _bow = playerView.GetBow;
             _bowArrow = playerView.GetBowArrow;
             _clampValue = playerData.clampValueFirstPlayer;
             _clampEqualizer = playerData.clamValueEqualizerFirstPlayer;
             _startTimeBeforeShoot = playerData.startTimeBeforeShoot;
             _minimalTimeBeforeShoot = playerData.minimalTimeBeforeShoot;
             _timeBeforeShootMultiply = playerData.timeBeforeShootMultiply;
+            SetStartTimeBeforeShoot();
 
-            _shootlessArea.OnShootActivator += ShootStateChanged;
-            _arrowView.OnCatch += OnCaught;
-            _arrowView.OnMiss += OnMissed;
+            _shootlessArea.OnShootActivator += OnShootActivatorHandler;
+            _arrowView.OnCatch += OnCatchHandler;
+            _arrowView.OnMiss += OnMissHandler;
         }
 
         public void Init(SingleScoreController scoreController)
         {
             _scoreController = scoreController;
-            _scoreController.OnGamePause += OnGamePaused;
+            _scoreController.OnGamePause += OnGamePauseHandler;
         }
 
-        private void ShootStateChanged(bool shootActivate)
+        private void OnShootActivatorHandler(bool shootActivate)
         {
             _canShoot = shootActivate;
-            if (_timerEnable)
+            if (_timerEnable && shootActivate)
             {
                 _arrowView.StartCoroutine(TimeBeforeShoot(_timeBeforeShoot)); 
             }
         }
     
-        private void OnMissed(bool isFirstPlayer)
+        private void OnMissHandler(bool isFirstPlayer)
         {
             SetStartTimeBeforeShoot();
             TakeArrow(_timerEnable, _timeBeforeShoot);
         }
 
-        private void OnCaught()
+        private void OnCatchHandler()
         {
             RemoveTimeBeforeShoot();
             _timerEnable = true;
             TakeArrow(_timerEnable, _timeBeforeShoot);
         }
     
-        private void OnGamePaused(bool isStop)
+        private void OnGamePauseHandler(bool isStop)
         {
             _canShoot = !isStop;
         }
@@ -97,6 +98,7 @@ namespace Controllers.SinglePlayer
         public void Execute(float deltaTime)
         {
             if (!_hasArrow) return;
+            if (!_canShoot) return;
             if (_playerInput.Player.Touch.phase != InputActionPhase.Performed) return;
             Aiming();
         }
@@ -104,7 +106,7 @@ namespace Controllers.SinglePlayer
         private void TakeArrow(bool timerEnable, float timeBeforeShoot)
         {
             _hasArrow = true;
-            _bowArrow.enabled = _hasArrow;
+            _bowArrow.enabled = true;
             if (!timerEnable)return;
             if (!_canShoot)
             {
@@ -127,15 +129,18 @@ namespace Controllers.SinglePlayer
             {
                 angleAxisZClamped = _clampValue[1];
             }
-            _bowBody.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
+            _bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
         }
     
         private void Shoot(InputAction.CallbackContext obj)
         {
             if (!_hasArrow) return;
             if (!_canShoot) return;
+            _arrowView.StopCoroutine(TimeBeforeShoot(_timeBeforeShoot));
+            _timerEnable = false;
             OnShoot?.Invoke();
             _hasArrow = false;
+            _bowArrow.enabled = false;
         }
     
         private IEnumerator TimeBeforeShoot(float timeBeforeShoot)
@@ -145,8 +150,6 @@ namespace Controllers.SinglePlayer
                 yield return null;
             }
             Shoot(new InputAction.CallbackContext());
-            _timerEnable = false;
-            _arrowView.StopCoroutine(TimeBeforeShoot(0));
         }
     
         private void SetStartTimeBeforeShoot()
@@ -171,9 +174,9 @@ namespace Controllers.SinglePlayer
     
         public void Cleanup()
         {
-            _shootlessArea.OnShootActivator -= ShootStateChanged;
-            _arrowView.OnCatch -= OnCaught;
-            _arrowView.OnMiss -= OnMissed;
+            _shootlessArea.OnShootActivator -= OnShootActivatorHandler;
+            _arrowView.OnCatch -= OnCatchHandler;
+            _arrowView.OnMiss -= OnMissHandler;
         }
     }
 }

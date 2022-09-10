@@ -9,7 +9,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button join;
     [SerializeField] private Button create;
     [SerializeField] private GameObject connectionLabel;
-    [SerializeField] private Button bot;
+    [SerializeField] private Button singlePlayerGame;
     
     private void Start()
     {
@@ -17,20 +17,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.ConnectUsingSettings(); 
+            join.gameObject.SetActive(false);
+            create.gameObject.SetActive(false);
+            singlePlayerGame.gameObject.SetActive(false);
         }
-
         join.onClick.AddListener(JoinRoom);
         create.onClick.AddListener(CreateRoom);
-        bot.onClick.AddListener(BotGame);
-        join.gameObject.SetActive(false);
-        create.gameObject.SetActive(false);
+        singlePlayerGame.onClick.AddListener(BotGame);
     }
 
     public override void OnConnectedToMaster()
     {
+        connectionLabel.SetActive(false);
         join.gameObject.SetActive(true);
         create.gameObject.SetActive(true);
-        connectionLabel.SetActive(false);
+        singlePlayerGame.gameObject.SetActive(true);
     }
 
     private void CreateRoom()
@@ -64,6 +65,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         join.onClick.RemoveListener(JoinRoom);
         create.onClick.RemoveListener(CreateRoom);
-        bot.onClick.RemoveListener(BotGame);
+        singlePlayerGame.onClick.RemoveListener(BotGame);
     }
 }

@@ -28,21 +28,22 @@ namespace Controllers.SinglePlayer
             _startPosition = _botTransform.position;
             _startRotation = _botTransform.rotation;
 
-            _arrowView.OnMiss += OnMissed;
+            _arrowView.OnMiss += OnMissHandler;
         }
 
         public void Init(SingleScoreController scoreController)
         {
             _scoreController = scoreController;
-            _scoreController.OnGamePause += MoveStopper;
+            _scoreController.OnGamePause += OnGamePauseHandler;
         }
 
-        private void OnMissed(bool isFirstPlayer)
+        private void OnMissHandler(bool isFirstPlayer)
         {
             ReturnToStartPosition();
+            _calculatedHorizontalDirection = 0;
         }
     
-        private void MoveStopper(bool isStopMove)
+        private void OnGamePauseHandler(bool isStopMove)
         {
             _isStopMove = isStopMove;
         }
@@ -64,7 +65,7 @@ namespace Controllers.SinglePlayer
             var angleBetweenDown = Mathf.Atan2(directionToArrow.y, directionToArrow.x) * Mathf.Rad2Deg + 90f;
             if (angleBetweenDown is > 90f or < -90f)
             {
-                angleBetweenDown = 0;
+                return 0;
             }
             return Mathf.Lerp(-1f, 1f, angleBetweenDown);
         }
@@ -83,8 +84,8 @@ namespace Controllers.SinglePlayer
 
         public void Cleanup()
         {
-            _arrowView.OnMiss -= OnMissed;
-            _scoreController.OnGamePause -= MoveStopper;
+            _arrowView.OnMiss -= OnMissHandler;
+            _scoreController.OnGamePause -= OnGamePauseHandler;
         }
     }
 }

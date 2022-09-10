@@ -13,7 +13,7 @@ namespace Controllers.SinglePlayer
             var scoreData = data.GetScoreData;
             var playerData = data.GetPlayerData;
 
-            var bot = Object.Instantiate(prefabData.bot, botData.spawnPoint.position, botData.spawnPoint.rotation);
+            var bot = Object.Instantiate(prefabData.bot, botData.spawnPoint.position, Quaternion.identity);
             var arrow = Object.Instantiate(prefabData.singleArrow);
             var arrowView = arrow.GetComponent<SingleArrowView>();
             var ui = Object.Instantiate(prefabData.ui);

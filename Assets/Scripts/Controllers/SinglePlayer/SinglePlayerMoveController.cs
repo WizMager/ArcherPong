@@ -17,7 +17,9 @@ namespace Controllers.SinglePlayer
         private PlayerInput _playerInput;
         private readonly Vector2 _startPosition;
         private readonly Quaternion _startRotation;
-        private bool _stopMove;
+        private bool _stopMove = true;
+        private bool _hasArrow = true;
+        private bool _canShoot = true;
 
         public SinglePlayerMoveController(PlayerView playerView, float playerMoveSpeed, ShootlessAreaView shootlessAreaView, SingleArrowView arrowView)
         {
@@ -29,10 +31,10 @@ namespace Controllers.SinglePlayer
             _startPosition = _playerTransform.position;
             _startRotation = _playerTransform.rotation;
         
-            _playerView.OnWallEnter += WallEntered;
-            _shootlessArea.OnShootActivator += MoveStopper;
-            _arrowView.OnMiss += ReturnToStartPosition;
-            _arrowView.OnCatch += OnCaught;
+            _playerView.OnWallEnter += OnWallEnterHandler;
+            _shootlessArea.OnShootActivator += OnShootActivatorHandler;
+            _arrowView.OnMiss += OnMissHandler;
+            _arrowView.OnCatch += OnCatchHandler;
         }
 
         public void Init(SinglePlayerShootController shootController, SingleScoreController scoreController)
@@ -40,36 +42,54 @@ namespace Controllers.SinglePlayer
             _shootController = shootController;
             _scoreController = scoreController;
         
-            _shootController.OnShoot += OnShooted;
-            _scoreController.OnGamePause += MoveStopper;
+            _shootController.OnShoot += OnShootHandler;
+            _scoreController.OnGamePause += OnGamePauseHandler;
         }
 
-        private void WallEntered(Vector3 normal)
+        private void OnWallEnterHandler(Vector3 normal)
         {
             _playerTransform.Translate(normal * _playerMoveSpeed * Time.deltaTime);
         }
     
-        private void MoveStopper(bool isStop)
+        private void OnShootActivatorHandler(bool shootActivate)
         {
-            _stopMove = isStop;
+            _canShoot = shootActivate;
+        }
+
+        private void OnMissHandler(bool isFirstPlayer)
+        {
+            ReturnToStartPosition();
+            _hasArrow = true;
+            _stopMove = true;
+        }
+        
+        private void OnCatchHandler()
+        {
+            _hasArrow = true;
+            if (!_canShoot) return;
+            _stopMove = true;
+        }
+
+        private void OnShootHandler()
+        {
+            _hasArrow = false;
+            _stopMove = false;
         }
     
-        private void ReturnToStartPosition(bool isFirstPlayer)
+        private void OnGamePauseHandler(bool isPause)
+        {
+            if (!isPause) return;
+            ReturnToStartPosition();
+            _hasArrow = true;
+            _stopMove = true;
+        }
+        
+        private void ReturnToStartPosition()
         {
             _playerTransform.position = _startPosition;
             _playerTransform.rotation = _startRotation;
         }
-    
-        private void OnCaught()
-        {
-            _stopMove = true;
-        }
-
-        private void OnShooted()
-        {
-            _stopMove = false;
-        }
-    
+        
         public void Awake()
         {
             _playerInput = new PlayerInput();
@@ -83,6 +103,7 @@ namespace Controllers.SinglePlayer
         public void Execute(float deltaTime)
         {
             if (_stopMove) return;
+            if (_hasArrow && _canShoot) return;
             _playerTransform.Translate(_playerInput.Player.Move.ReadValue<Vector2>() * (_playerMoveSpeed * deltaTime)); 
         }
 
@@ -93,12 +114,12 @@ namespace Controllers.SinglePlayer
 
         public void Cleanup()
         {
-            _playerView.OnWallEnter -= WallEntered;
-            _shootlessArea.OnShootActivator -= MoveStopper;
-            _arrowView.OnMiss -= ReturnToStartPosition;
-            _arrowView.OnCatch -= OnCaught;
-            _shootController.OnShoot -= OnShooted;
-            _scoreController.OnGamePause -= MoveStopper;
+            _playerView.OnWallEnter -= OnWallEnterHandler;
+            _shootlessArea.OnShootActivator -= OnShootActivatorHandler;
+            _arrowView.OnMiss -= OnMissHandler;
+            _arrowView.OnCatch -= OnCatchHandler;
+            _shootController.OnShoot -= OnShootHandler;
+            _scoreController.OnGamePause -= OnGamePauseHandler;
         }
     }
 }
