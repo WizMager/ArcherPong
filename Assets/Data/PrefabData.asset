@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff0acf68dd2244bca460d4bba8471eb0, type: 3}
+  m_Name: PrefabData
+  m_EditorClassIdentifier: 
+  ui: {fileID: 4247158610699634944, guid: d2ed008a1e02a3846b56c784fe3e7d0c, type: 3}
+  mainCamera: {fileID: 7184284843703280273, guid: a09c6869bd8a3ad458274730c7beba53, type: 3}
+  bot: {fileID: 4563074728000095915, guid: e072307e691f7d44c969b34ae3592aa0, type: 3}
+  singleArrow: {fileID: 1107704138982592212, guid: f391da88489e37c4cbfd2c6cd3fa3c94, type: 3}
+  singleEnvironment: {fileID: 2104951743156801488, guid: af125f43deced7a4999c77bf5c8e97dd, type: 3}
+  singlePlayer: {fileID: 2018520686521994827, guid: b1e641638ae0117439b58641dc787fa5, type: 3}
+  networkArrow: {fileID: 8408665345107903063, guid: daaec01ae757ab64d8704ad63bfa9bd8, type: 3}

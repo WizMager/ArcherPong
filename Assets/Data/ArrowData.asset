@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 204e9e1bd55e4f93a9af6468800d0845, type: 3}
   m_Name: ArrowData
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 1864050637039755241, guid: f391da88489e37c4cbfd2c6cd3fa3c94, type: 3}
-  arrowSpeed: 7
+  soloArrowPrefab: {fileID: 1107704138982592212, guid: f391da88489e37c4cbfd2c6cd3fa3c94, type: 3}
+  networkArrowPrefab: {fileID: 8408665345107903063, guid: daaec01ae757ab64d8704ad63bfa9bd8, type: 3}
+  startArrowSpeed: 5
+  maxArrowSpeed: 15
+  arrowMoveSpeedMultiplyPercent: 20

@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     private bool _stopMove;
     private SpriteRenderer _spriteRenderer;
     private Transform _stickTransform;
-    private ShootlessPositionView _shootless;
+    private ShootlessAreaView _shootless;
     private bool _canShoot = true;
     private bool _timeEnable;
     private float _timeBeforeShoot;
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         FindObjectOfType<ArrowController>().AddPlayerController(this);
         FindObjectOfType<ScoreController>().AddPlayerController(this);
         _stickTransform = FindObjectOfType<JoystickPositionView>().gameObject.transform;
-        _shootless = FindObjectOfType<ShootlessPositionView>();
+        _shootless = FindObjectOfType<ShootlessAreaView>();
         TakeArrow(_playerView.IsFirstPlayer, (false, 0f));
         _startPosition = _playerTransform.position;
         _startRotation = _playerTransform.rotation;
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
         {
             if (!PhotonNetwork.IsMasterClient)
             {
-                _wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
+                //_wallColliders = FindObjectOfType<WallCollidersView>().gameObject;
                 _mainCamera.transform.Rotate(0, 0, 180f);
                 _wallColliders.transform.Rotate(0, 0, 180f);
             }

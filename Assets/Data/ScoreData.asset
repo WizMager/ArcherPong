@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77dbddd5163f4454b1db09952db3a49c, type: 3}
   m_Name: ScoreData
   m_EditorClassIdentifier: 
-  scoreCanvasPrefab: {fileID: 6526641534438434857, guid: 0d940ea42f460794f863b4a05938b9f4, type: 3}
+  winScoreLimit: 2
+  watchScoreTime: 5
