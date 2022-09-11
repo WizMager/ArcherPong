@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using Controllers.Interfaces;
-using Controllers.SinglePlayer;
 using Data;
 using ExitGames.Client.Photon;
 using Photon.Pun;
@@ -28,14 +27,16 @@ namespace Controllers.MultiPlayer
         private readonly float _startTimeBeforeShoot;
         private readonly float _minimalTimeBeforeShoot;
         private readonly int _timeBeforeShootMultiply;
-        private SingleScoreController _scoreController;
-
+        private readonly bool _isFirstPlayer;
+        private readonly Transform _shootPosition;
+        private ScoreController _scoreController;
+        
         private bool _hasArrow = true;
         private PlayerInput _playerInput;
         private bool _canShoot = true;
         private bool _timerEnable;
         private float _timeBeforeShoot;
-        private readonly bool _isFirstPlayer;
+        
 
         public PlayerShootController(PhotonView photonView, Camera mainCamera, ShootlessAreaView shootlessAreaView, Transform stickPosition, PlayerView playerView, ArrowView arrowView, PlayerData playerData)
         {
@@ -46,12 +47,21 @@ namespace Controllers.MultiPlayer
             _arrowView = arrowView;
             _bow = playerView.GetBow;
             _bowArrow = playerView.GetBowArrow;
-            _clampValue = playerData.clampValueFirstPlayer;
-            _clampEqualizer = playerData.clamValueEqualizerFirstPlayer;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _clampValue = playerData.clampValueFirstPlayer;
+                _clampEqualizer = playerData.clamValueEqualizerFirstPlayer; 
+            }
+            else
+            {
+                _clampValue = playerData.clampValueSecondPlayer;
+                _clampEqualizer = playerData.clamValueEqualizerSecondPlayer;  
+            }
             _startTimeBeforeShoot = playerData.startTimeBeforeShoot;
             _minimalTimeBeforeShoot = playerData.minimalTimeBeforeShoot;
             _timeBeforeShootMultiply = playerData.timeBeforeShootMultiply;
             _isFirstPlayer = playerView.IsFirstPlayer;
+            _shootPosition = playerView.GetShootPosition;
             SetStartTimeBeforeShoot();
 
             _shootlessArea.OnShootActivator += OnShootActivatorHandler;
@@ -60,7 +70,7 @@ namespace Controllers.MultiPlayer
             _arrowView.OnMiss += OnMissHandler;
         }
 
-        public void Init(SingleScoreController scoreController)
+        public void Init(ScoreController scoreController)
         {
             _scoreController = scoreController;
             _scoreController.OnGamePause += OnGamePauseHandler;
@@ -169,10 +179,21 @@ namespace Controllers.MultiPlayer
             direction.Normalize();
             var angleAxisZ = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
             var angleAxisZClamped = Math.Clamp(angleAxisZ, _clampValue[0], _clampValue[1]); 
-            if (angleAxisZ > _clampEqualizer[0] && angleAxisZ < _clampEqualizer[1])
+            if (PhotonNetwork.IsMasterClient)
             {
-                angleAxisZClamped = _clampValue[1];
+                if (angleAxisZ > _clampEqualizer[0] && angleAxisZ < _clampEqualizer[1])
+                {
+                    angleAxisZClamped = _clampValue[1];
+                }
             }
+            else
+            {
+                if (angleAxisZ > _clampEqualizer[0] && angleAxisZ < _clampEqualizer[1])
+                {
+                    angleAxisZClamped = _clampValue[0];
+                }
+            }
+            
             _bow.rotation = Quaternion.Euler(0f, 0f, angleAxisZClamped);
         }
     
@@ -184,8 +205,9 @@ namespace Controllers.MultiPlayer
             if (!_canShoot) return;
             _arrowView.StopCoroutine(TimeBeforeShoot(_timeBeforeShoot));
             _timerEnable = false;
-            PhotonNetwork.RaiseEvent((int) PhotonEventCode.PlayerShoot, _isFirstPlayer,
-                new RaiseEventOptions() {Receivers = ReceiverGroup.MasterClient}, SendOptions.SendReliable);
+            var eventContent = new object[] {_isFirstPlayer, _shootPosition.position};
+            _arrowView.transform.SetPositionAndRotation(_shootPosition.position, _shootPosition.rotation);
+            PhotonNetwork.RaiseEvent((int) PhotonEventCode.PlayerShoot, eventContent, new RaiseEventOptions{Receivers = ReceiverGroup.All}, SendOptions.SendReliable);
             _hasArrow = false;
             _bowArrow.enabled = false;
         }
@@ -223,6 +245,7 @@ namespace Controllers.MultiPlayer
         public void Cleanup()
         {
             _shootlessArea.OnShootActivator -= OnShootActivatorHandler;
+            _scoreController.OnGamePause -= OnGamePauseHandler;
             if (!PhotonNetwork.IsMasterClient) return;
             _arrowView.OnCatch -= OnCatchHandler;
             _arrowView.OnMiss -= OnMissHandler;

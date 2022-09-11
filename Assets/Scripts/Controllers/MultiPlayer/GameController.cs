@@ -6,12 +6,13 @@ namespace Controllers.MultiPlayer
     public class GameController : MonoBehaviourPunCallbacks
     {
         [SerializeField] private Data.Data data;
+        [SerializeField] private GameObject arrow;
         private Controllers _controllers;
         
         private void Awake()
         {
             _controllers = new Controllers();
-            new GameInitialization(_controllers, data);
+            new GameInitialization(_controllers, data, arrow);
             _controllers.Awake();
         }
 

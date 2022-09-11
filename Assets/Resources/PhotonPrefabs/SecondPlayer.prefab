@@ -280,9 +280,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFirstPlayer: 0
-  bow: {fileID: 0}
-  bowArrow: {fileID: 0}
-  shootPosition: {fileID: 0}
+  bow: {fileID: 7595877042427305252}
+  bowArrow: {fileID: 7595877042534779316}
+  shootPosition: {fileID: 7595877042500595395}
 --- !u!114 &4282274735872162499
 MonoBehaviour:
   m_ObjectHideFlags: 0

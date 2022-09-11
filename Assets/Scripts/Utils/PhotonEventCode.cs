@@ -4,6 +4,7 @@
     {
         ArrowCatch,
         ArrowMiss,
-        PlayerShoot
+        PlayerShoot,
+        OnStopGame
     }
 }

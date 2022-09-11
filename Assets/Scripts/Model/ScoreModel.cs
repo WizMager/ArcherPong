@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Data;
+using Photon.Pun;
 using UnityEngine;
 using Views;
 
@@ -37,7 +38,10 @@ namespace Model
             }
 
             if (_firstPlayerScore < _winScoreLimit && _secondPlayerScore < _winScoreLimit) return;
-            OnStopGame?.Invoke(true);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                OnStopGame?.Invoke(true);
+            }
             _uiView.WinTextActivation(true);
             _uiView.SetWinText(_firstPlayerScore > _secondPlayerScore ? "First Player\n Win!" : "Bot\n Win!");
             _uiView.StartCoroutine(WatchScoreTimer());

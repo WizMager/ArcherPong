@@ -5,7 +5,7 @@ namespace Views
     public class ArrowView : MonoBehaviour
     {
         public Action<bool> OnMiss;
-        public Action<Vector2, bool> OnReflect;
+        public Action<Vector2> OnReflect;
         public Action<bool> OnCatch;
         [SerializeField] private Rigidbody2D arrowRigidbody;
         [SerializeField] private Transform arrowTransform;
@@ -28,13 +28,8 @@ namespace Views
                 }
                 else
                 {
-                    OnReflect?.Invoke(col.contacts[0].normal, false);
+                    OnReflect?.Invoke(col.contacts[0].normal);
                 }
-            }
-
-            if (colliderTag == "Bot")
-            {
-                OnReflect?.Invoke(col.contacts[0].normal, true);
             }
 
             if (colliderTag == "Player")

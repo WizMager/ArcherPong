@@ -177,3 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c241f6b410e542559355d8c46524de03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowRigidbody: {fileID: 7941334015836346293}
+  arrowTransform: {fileID: 6162378490551882190}
+  spriteRenderer: {fileID: 7002989990338475279}

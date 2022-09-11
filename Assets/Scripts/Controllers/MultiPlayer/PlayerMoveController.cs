@@ -1,5 +1,4 @@
 ﻿using Controllers.Interfaces;
-using Controllers.SinglePlayer;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -17,8 +16,8 @@ namespace Controllers.MultiPlayer
         private readonly float _playerMoveSpeed;
         private readonly ShootlessAreaView _shootlessArea;
         private readonly ArrowView _arrowView;
-        private SinglePlayerShootController _shootController;
-        private SingleScoreController _scoreController;
+        private PlayerShootController _shootController;
+        private ScoreController _scoreController;
     
         private PlayerInput _playerInput;
         private readonly Vector2 _startPosition;
@@ -47,7 +46,7 @@ namespace Controllers.MultiPlayer
             _arrowView.OnCatch += OnCatchHandler;
         }
         
-        public void Init(SinglePlayerShootController shootController, SingleScoreController scoreController)
+        public void Init(PlayerShootController shootController, ScoreController scoreController)
         {
             _shootController = shootController;
             _scoreController = scoreController;
@@ -95,8 +94,9 @@ namespace Controllers.MultiPlayer
             _stopMove = true;
         }
         
-        private void OnShootHandler()
+        private void OnShootHandler(bool isFirstPlayer)
         {
+            if (_isFirstPlayer != isFirstPlayer) return;
             _hasArrow = false;
             _stopMove = false;
         }
