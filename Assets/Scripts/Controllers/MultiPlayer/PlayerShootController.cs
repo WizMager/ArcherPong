@@ -31,7 +31,7 @@ namespace Controllers.MultiPlayer
         private readonly Transform _shootPosition;
         private ScoreController _scoreController;
         
-        private bool _hasArrow = true;
+        private bool _hasArrow;
         private PlayerInput _playerInput;
         private bool _canShoot = true;
         private bool _timerEnable;
@@ -62,6 +62,16 @@ namespace Controllers.MultiPlayer
             _timeBeforeShootMultiply = playerData.timeBeforeShootMultiply;
             _isFirstPlayer = playerView.IsFirstPlayer;
             _shootPosition = playerView.GetShootPosition;
+            if (_isFirstPlayer)
+            {
+                _hasArrow = true;
+                _bowArrow.enabled = true;
+            }
+            else
+            {
+                _hasArrow = false;
+                _bowArrow.enabled = false;
+            }
             SetStartTimeBeforeShoot();
 
             _shootlessArea.OnShootActivator += OnShootActivatorHandler;
@@ -143,6 +153,7 @@ namespace Controllers.MultiPlayer
         public void OnEnable()
         {
             if (!_photonView.IsMine) return;
+            PhotonNetwork.AddCallbackTarget(this);
             _playerInput.Player.Aiming.Enable();
             _playerInput.Player.Touch.Enable();
             _playerInput.Player.Touch.canceled += Shoot;
@@ -205,9 +216,8 @@ namespace Controllers.MultiPlayer
             if (!_canShoot) return;
             _arrowView.StopCoroutine(TimeBeforeShoot(_timeBeforeShoot));
             _timerEnable = false;
-            var eventContent = new object[] {_isFirstPlayer, _shootPosition.position};
             _arrowView.transform.SetPositionAndRotation(_shootPosition.position, _shootPosition.rotation);
-            PhotonNetwork.RaiseEvent((int) PhotonEventCode.PlayerShoot, eventContent, new RaiseEventOptions{Receivers = ReceiverGroup.All}, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((int) PhotonEventCode.PlayerShoot, _isFirstPlayer, new RaiseEventOptions{Receivers = ReceiverGroup.All}, SendOptions.SendReliable);
             _hasArrow = false;
             _bowArrow.enabled = false;
         }
@@ -237,6 +247,7 @@ namespace Controllers.MultiPlayer
         public void OnDisable()
         {
             if (!_photonView.IsMine) return;
+            PhotonNetwork.RemoveCallbackTarget(this);
             _playerInput.Player.Shoot.performed -= Shoot;
             _playerInput.Player.Aiming.Disable();
             _playerInput.Player.Touch.Disable();
