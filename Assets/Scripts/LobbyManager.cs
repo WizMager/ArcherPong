@@ -13,31 +13,23 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     
     private void Start()
     {
-        if (PhotonNetwork.NetworkClientState != ClientState.ConnectingToMasterServer)
+        if (PhotonNetwork.NetworkClientState == ClientState.ConnectedToMasterServer)
+        {
+            connectionLabel.SetActive(false);
+            join.onClick.AddListener(JoinRoom);
+            create.onClick.AddListener(CreateRoom);
+            singlePlayerGame.onClick.AddListener(BotGame);
+        }
+        else
         {
             PhotonNetwork.AutomaticallySyncScene = true;
-            PhotonNetwork.ConnectUsingSettings(); 
+            PhotonNetwork.ConnectUsingSettings();
+            join.onClick.AddListener(JoinRoom);
+            create.onClick.AddListener(CreateRoom);
+            singlePlayerGame.onClick.AddListener(BotGame);
             join.gameObject.SetActive(false);
             create.gameObject.SetActive(false);
-            singlePlayerGame.gameObject.SetActive(false);
         }
-        join.onClick.AddListener(JoinRoom);
-        create.onClick.AddListener(CreateRoom);
-        singlePlayerGame.onClick.AddListener(BotGame);
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        connectionLabel.SetActive(false);
-        join.gameObject.SetActive(true);
-        create.gameObject.SetActive(true);
-        singlePlayerGame.gameObject.SetActive(true);
-    }
-
-    private void CreateRoom()
-    {
-        if (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer) return;
-        PhotonNetwork.CreateRoom(null, new RoomOptions {MaxPlayers = 2});
     }
 
     private void JoinRoom()
@@ -46,19 +38,32 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom();
     }
     
+    private void CreateRoom()
+    {
+        if (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer) return;
+        PhotonNetwork.CreateRoom(null, new RoomOptions {MaxPlayers = 2});
+    }
+
     private void BotGame()
     {
         SceneManager.LoadScene(2);
     }
-
-    public override void OnJoinRandomFailed(short returnCode, string message)
+    
+    public override void OnConnectedToMaster()
     {
-        CreateRoom();
+        connectionLabel.SetActive(false);
+        join.gameObject.SetActive(true);
+        create.gameObject.SetActive(true);
     }
 
     public override void OnJoinedRoom()
     {
         PhotonNetwork.LoadLevel(1);
+    }
+    
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        CreateRoom();
     }
 
     private void OnDestroy()
