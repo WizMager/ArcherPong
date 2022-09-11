@@ -2,14 +2,8 @@
 {
     public enum PhotonEventCode
     {
-        ArrowCaught,
-        ArrowEnable,
-        PlayerShoot,
-        ArrowShoot,
-        ArrowMissed,
-        FirstPlayerScore,
-        SecondPlayerScore,
-        WatchWinScore,
-        StopWatchWinScore
+        ArrowCatch,
+        ArrowMiss,
+        PlayerShoot
     }
 }

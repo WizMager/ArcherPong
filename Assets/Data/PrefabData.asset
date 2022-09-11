@@ -18,4 +18,8 @@ MonoBehaviour:
   singleArrow: {fileID: 1107704138982592212, guid: f391da88489e37c4cbfd2c6cd3fa3c94, type: 3}
   singleEnvironment: {fileID: 2104951743156801488, guid: af125f43deced7a4999c77bf5c8e97dd, type: 3}
   singlePlayer: {fileID: 2018520686521994827, guid: b1e641638ae0117439b58641dc787fa5, type: 3}
-  networkArrow: {fileID: 8408665345107903063, guid: daaec01ae757ab64d8704ad63bfa9bd8, type: 3}
+  firstPlayerEnvironment: {fileID: 8454456071554396113, guid: 184ea71232b23ab4189ba8d1e7be949e, type: 3}
+  secondPlayerEnvironment: {fileID: 8454456071554396113, guid: fa7f9d755b84cbc4aacc9a7780013c31, type: 3}
+  networkArrow: PhotonPrefabs/Arrow
+  firstPlayer: PhotonPrefabs/FirstPlayer
+  secondPlayer: PhotonPrefabs/SecondPlayer

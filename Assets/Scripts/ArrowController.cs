@@ -36,7 +36,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             _rigidbody = GetComponent<Rigidbody2D>();
             _transform = GetComponent<Transform>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _arrowView.OnReflect += ArrowReflected;
+            //_arrowView.OnReflect += ArrowReflected;
             _arrowView.OnCatch += ArrowCaught;
             _arrowView.OnMiss += PlayerMissedArrow;
             scoreController.OnStartNextRound += SetStartArrowMoveSpeed;
@@ -61,16 +61,16 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         {
             switch (photonEvent.Code)
             {
-                case (int)PhotonEventCode.ArrowCaught:
+                case (int)PhotonEventCode.ArrowCatch:
                     ArrowTake((bool)photonEvent.CustomData, true);
                    break; 
-                case (int)PhotonEventCode.ArrowEnable:
-                    _spriteRenderer.enabled = true;
-                    break;
-                case (int)PhotonEventCode.ArrowShoot:
-                    PrepareShootArrow((bool)photonEvent.CustomData);
-                    break;
-                case (int)PhotonEventCode.ArrowMissed:
+                // case (int)PhotonEventCode.ArrowEnable:
+                //     _spriteRenderer.enabled = true;
+                //     break;
+                // case (int)PhotonEventCode.ArrowShoot:
+                //     PrepareShootArrow((bool)photonEvent.CustomData);
+                //     break;
+                case (int)PhotonEventCode.ArrowMiss:
                     ArrowTake((bool)photonEvent.CustomData, false);
                     if (setStartPositionAfterMissArrow)
                     {
@@ -97,7 +97,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
                 _timeBeforeShoot -= _timeBeforeShoot / 100 * timeBeforeShootMultiply;
             }
             if (!PhotonNetwork.IsMasterClient) return;
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCaught, isFirstPlayer, RaiseEventOptions.Default,
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowCatch, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             ArrowTake(isFirstPlayer, true);
             if (_arrowMoveSpeed > maxArrowMoveSpeed)return;
@@ -155,7 +155,7 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
             {
                 SetPlayersStartPosition(); 
             }
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowMissed, isFirstPlayer, RaiseEventOptions.Default,
+            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowMiss, isFirstPlayer, RaiseEventOptions.Default,
                 SendOptions.SendReliable);
             OnPlayerMiss?.Invoke(isFirstPlayer);
             SetStartArrowMoveSpeed();
@@ -174,8 +174,8 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         private void Shooted(bool isFirstPlayer)
         {
             PrepareShootArrow(isFirstPlayer);
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowShoot, isFirstPlayer, RaiseEventOptions.Default,
-                SendOptions.SendReliable);
+            // PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowShoot, isFirstPlayer, RaiseEventOptions.Default,
+            //     SendOptions.SendReliable);
             ArrowEnable();
         }
 
@@ -198,8 +198,8 @@ public class ArrowController : MonoBehaviour, IOnEventCallback
         private void ArrowEnable()
         {
             _spriteRenderer.enabled = true;
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowEnable, null, RaiseEventOptions.Default,
-                SendOptions.SendReliable);
+            // PhotonNetwork.RaiseEvent((int)PhotonEventCode.ArrowEnable, null, RaiseEventOptions.Default,
+            //     SendOptions.SendReliable);
             _rigidbody.AddForce(_transform.up * _arrowMoveSpeed * _rigidbody.mass, ForceMode2D.Impulse);
         }
 

@@ -15,7 +15,13 @@ namespace Data
         public GameObject singleEnvironment;
         public GameObject singlePlayer;
         
-        [Header("Multiplayer")]
-        public GameObject networkArrow;
+        [Header("Multi")]
+        public GameObject firstPlayerEnvironment;
+        public GameObject secondPlayerEnvironment;
+        
+        [Header("Photon Prefabs Path")]
+        public string networkArrow;
+        public string firstPlayer;
+        public string secondPlayer;
     }
 }

@@ -39,21 +39,21 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             _secondPlayer++;
             secondPlayerScore.text = _secondPlayer.ToString();
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.SecondPlayerScore, _secondPlayer, RaiseEventOptions.Default,
-                SendOptions.SendReliable);
+            // PhotonNetwork.RaiseEvent((int)PhotonEventCode.SecondPlayerScore, _secondPlayer, RaiseEventOptions.Default,
+            //     SendOptions.SendReliable);
         }
         else
         {
             _firstPlayer++;
             firstPlayerScore.text = _firstPlayer.ToString();
-            PhotonNetwork.RaiseEvent((int)PhotonEventCode.FirstPlayerScore, _firstPlayer, RaiseEventOptions.Default,
-                SendOptions.SendReliable);
+            // PhotonNetwork.RaiseEvent((int)PhotonEventCode.FirstPlayerScore, _firstPlayer, RaiseEventOptions.Default,
+            //     SendOptions.SendReliable);
         }
         
         if (_firstPlayer < winScoreLimit && _secondPlayer < winScoreLimit) return;
         var winText = _firstPlayer > _secondPlayer ? "First Player\n Win!" : "Second Player\n Win!";
-        PhotonNetwork.RaiseEvent((int)PhotonEventCode.WatchWinScore, winText, RaiseEventOptions.Default,
-            SendOptions.SendReliable);
+        // PhotonNetwork.RaiseEvent((int)PhotonEventCode.WatchWinScore, winText, RaiseEventOptions.Default,
+        //     SendOptions.SendReliable);
         WatchWinScore(winText);
         StartCoroutine(WatchScoreTimer());
     }
@@ -88,8 +88,8 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
             yield return null;
         }
         StopWatchWinScore();
-        PhotonNetwork.RaiseEvent((int)PhotonEventCode.StopWatchWinScore, null, RaiseEventOptions.Default,
-            SendOptions.SendReliable);
+        // PhotonNetwork.RaiseEvent((int)PhotonEventCode.StopWatchWinScore, null, RaiseEventOptions.Default,
+        //     SendOptions.SendReliable);
         OnStartNextRound?.Invoke();
     }
 
@@ -97,18 +97,18 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         switch (photonEvent.Code)
         {
-            case (int)PhotonEventCode.FirstPlayerScore:
-                secondPlayerScore.text = photonEvent.CustomData.ToString();
-                break;
-            case (int)PhotonEventCode.SecondPlayerScore:
-                firstPlayerScore.text = photonEvent.CustomData.ToString();
-                break;
-            case (int)PhotonEventCode.WatchWinScore:
-                WatchWinScore(photonEvent.CustomData.ToString());
-                break;
-            case (int)PhotonEventCode.StopWatchWinScore:
-                StopWatchWinScore();
-                break;
+            // case (int)PhotonEventCode.FirstPlayerScore:
+            //     secondPlayerScore.text = photonEvent.CustomData.ToString();
+            //     break;
+            // case (int)PhotonEventCode.SecondPlayerScore:
+            //     firstPlayerScore.text = photonEvent.CustomData.ToString();
+            //     break;
+            // case (int)PhotonEventCode.WatchWinScore:
+            //     WatchWinScore(photonEvent.CustomData.ToString());
+            //     break;
+            // case (int)PhotonEventCode.StopWatchWinScore:
+            //     StopWatchWinScore();
+            //     break;
         }
     }
 

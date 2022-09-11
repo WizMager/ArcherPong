@@ -5,14 +5,21 @@ namespace Views
     public class ArrowView : MonoBehaviour
     {
         public Action<bool> OnMiss;
-        public Action<Vector2> OnReflect;
+        public Action<Vector2, bool> OnReflect;
         public Action<bool> OnCatch;
+        [SerializeField] private Rigidbody2D arrowRigidbody;
+        [SerializeField] private Transform arrowTransform;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        
+        public Rigidbody2D GetRigidbody => arrowRigidbody;
+        public Transform GetTransform => arrowTransform;
+        public SpriteRenderer GetSpriteRenderer => spriteRenderer;
 
         private void OnCollisionEnter2D(Collision2D col)
         {
-            tag = col.transform.tag;
-
-            if (CompareTag("Wall"))
+            var colliderTag = col.transform.tag;
+            
+            if (colliderTag == "Wall")
             {
                 var destroyPlayerWall = col.gameObject.GetComponent<PlayerWallView>();
                 if (destroyPlayerWall)
@@ -21,14 +28,18 @@ namespace Views
                 }
                 else
                 {
-                    OnReflect?.Invoke(col.contacts[0].normal);
+                    OnReflect?.Invoke(col.contacts[0].normal, false);
                 }
             }
 
-            if (CompareTag("Player"))
+            if (colliderTag == "Bot")
             {
-                var isFirstPlayer = col.gameObject.GetComponent<PlayerView>().IsFirstPlayer;
-                OnCatch?.Invoke(isFirstPlayer);
+                OnReflect?.Invoke(col.contacts[0].normal, true);
+            }
+
+            if (colliderTag == "Player")
+            {
+                OnCatch?.Invoke(col.gameObject.GetComponent<PlayerView>().IsFirstPlayer);
             }
         }
     }

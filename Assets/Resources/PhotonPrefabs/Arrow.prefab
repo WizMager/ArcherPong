@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 4733204966823222636}
   - component: {fileID: 7613195618556912378}
   - component: {fileID: 5865922159584604284}
-  - component: {fileID: 7885772956613418424}
   m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
@@ -178,23 +177,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c241f6b410e542559355d8c46524de03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7885772956613418424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8408665345107903063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8df2bd5d3a11486389f368747cdb67c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startArrowMoveSpeed: 5
-  maxArrowMoveSpeed: 15
-  setStartPositionAfterMissArrow: 1
-  arrowMoveSpeedMultiply: 20
-  scoreController: {fileID: 0}
-  startTimeBeforeShoot: 2
-  minimalTimeBeforeShoot: 1
-  timeBeforeShootMultiply: 20

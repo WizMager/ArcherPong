@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour, IOnEventCallback
     {
         set => _stopMove = value;
     }
-    
+
     private void Awake()
     {
         _photonView = GetComponent<PhotonView>();
