@@ -1,5 +1,9 @@
-﻿using Photon.Pun;
+﻿using System;
+using Photon.Pun;
 using Photon.Realtime;
+using PlayFab;
+using PlayFab.ClientModels;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,9 +14,28 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button create;
     [SerializeField] private GameObject connectionLabel;
     [SerializeField] private Button bot;
-    
+    private const string PlayFabAuthorizedKey = "AuthorizedKey";
+    private const string LastScoreKey = "LastScore";
+    private bool _photonIsLogin;
+    private bool _playFabIsLogin;
+    private bool _isCheckedLogin;
+    private string _playFabId;
+
     private void Start()
     {
+        if (!PlayFabClientAPI.IsClientLoggedIn())
+        {
+            var needCreation = !PlayerPrefs.HasKey(PlayFabAuthorizedKey);
+            var id = PlayerPrefs.GetString(PlayFabAuthorizedKey, Guid.NewGuid().ToString());
+            var playFabRequest = new LoginWithCustomIDRequest()
+            {
+                CustomId = id,
+                CreateAccount = needCreation
+            };
+            PlayFabClientAPI.LoginWithCustomID(playFabRequest, OnLoginSuccess, OnPlayFabError); 
+        }
+
+
         if (PhotonNetwork.NetworkClientState != ClientState.ConnectingToMasterServer)
         {
             PhotonNetwork.AutomaticallySyncScene = true;
@@ -24,13 +47,51 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         bot.onClick.AddListener(BotGame);
         join.gameObject.SetActive(false);
         create.gameObject.SetActive(false);
+        bot.gameObject.SetActive(false);
     }
 
+    private void OnPlayFabError(PlayFabError error)
+    {
+        var errorMessage = error.GenerateErrorReport();
+        Debug.Log(errorMessage);
+    }
+
+    private void OnLoginSuccess(LoginResult result)
+    {
+        _playFabId = result.PlayFabId;
+        _playFabIsLogin = true;
+        Debug.Log("Login is success!");
+    }
+
+    private void SetPreviousScore()
+    {
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest()
+        {
+            PlayFabId = _playFabId
+        }, resultCallback =>
+        {
+            var lastScore = resultCallback.Data.ContainsKey(LastScoreKey)
+                ? int.Parse(resultCallback.Data[LastScoreKey].Value)
+                : -1;
+            SrtLastScoreText(lastScore);
+        }, OnPlayFabError);
+    }
+
+    private void SrtLastScoreText(int score)
+    {
+        if (score < 0)
+        {
+            connectionLabel.GetComponent<TMP_Text>().text = "Your have no last score...";  
+        }
+        else
+        {
+            connectionLabel.GetComponent<TMP_Text>().text = "Your last score is: " + score; 
+        }
+    }
+    
     public override void OnConnectedToMaster()
     {
-        join.gameObject.SetActive(true);
-        create.gameObject.SetActive(true);
-        connectionLabel.SetActive(false);
+        _photonIsLogin = true;
     }
 
     private void CreateRoom()
@@ -58,6 +119,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         PhotonNetwork.LoadLevel(1);
+    }
+
+    private void Update()
+    {
+        if (_isCheckedLogin) return;
+        if (_photonIsLogin && _playFabIsLogin)
+        {
+            SetPreviousScore();
+            join.gameObject.SetActive(true);
+            create.gameObject.SetActive(true);
+            bot.gameObject.SetActive(true);
+            _isCheckedLogin = true;
+        }
     }
 
     private void OnDestroy()
