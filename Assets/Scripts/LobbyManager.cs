@@ -16,6 +16,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button bot;
     private const string PlayFabAuthorizedKey = "AuthorizedKey";
     private const string LastScoreKey = "LastScore";
+    private const string WinRoundKey = "WinRound";
     private bool _photonIsLogin = true;
     private bool _playFabIsLogin = true;
     private bool _isCheckedLogin;
@@ -78,7 +79,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         _playFabId = result.PlayFabId;
         _playFabIsLogin = true;
         SetPreviousScore();
-        Debug.Log("Login is success!");
+        Debug.Log($"Login is success! {_playFabId}");
     }
 
     private void SetPreviousScore()
@@ -91,19 +92,22 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             var lastScore = resultCallback.Data.ContainsKey(LastScoreKey)
                 ? int.Parse(resultCallback.Data[LastScoreKey].Value)
                 : -1;
-            SrtLastScoreText(lastScore);
+            var winScore = resultCallback.Data.ContainsKey(WinRoundKey)
+                ? int.Parse(resultCallback.Data[WinRoundKey].Value)
+                : 0;
+            SetLastScoreText(lastScore, winScore);
         }, OnPlayFabError);
     }
 
-    private void SrtLastScoreText(int score)
+    private void SetLastScoreText(int lastScore, int winScore)
     {
-        if (score < 0)
+        if (lastScore < 0)
         {
             connectionLabel.GetComponent<TMP_Text>().text = "Your have no last score...";  
         }
         else
         {
-            connectionLabel.GetComponent<TMP_Text>().text = "Your last score is: " + score; 
+            connectionLabel.GetComponent<TMP_Text>().text = $"Your last score is: {lastScore}\n You win {winScore} rounds."; 
         }
     }
     

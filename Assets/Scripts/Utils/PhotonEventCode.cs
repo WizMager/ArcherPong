@@ -10,6 +10,7 @@
         FirstPlayerScore,
         SecondPlayerScore,
         WatchWinScore,
-        StopWatchWinScore
+        StopWatchWinScore,
+        SecondPlayerWinRound
     }
 }
