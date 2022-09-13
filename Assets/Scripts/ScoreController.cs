@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using PlayFab;
+using PlayFab.ClientModels;
 using TMPro;
 using UnityEngine;
 using Utils;
@@ -20,6 +22,7 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
     private int _firstPlayer;
     private int _secondPlayer;
     private readonly List<PlayerController> _playerControllers = new(2);
+    private const string LastScoreKey = "LastScore";
 
     private void Start()
     {
@@ -114,6 +117,11 @@ public class ScoreController : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void OnDestroy()
     {
+        var scoreData = new Dictionary<string, string> {{LastScoreKey, (PhotonNetwork.IsMasterClient ? _firstPlayer : _secondPlayer).ToString()}};
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
+        {
+            Data = scoreData
+        }, _=> {}, error => { Debug.Log(error.GenerateErrorReport());});
         if (!PhotonNetwork.IsMasterClient) return;
         arrowController.OnPlayerMiss -= ArrowMissed;
     }
