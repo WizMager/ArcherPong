@@ -13,7 +13,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     
     private void Start()
     {
-        if (PhotonNetwork.NetworkClientState != ClientState.ConnectingToMasterServer)
+        if (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer)
         {
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.ConnectUsingSettings(); 
@@ -22,12 +22,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         join.onClick.AddListener(JoinRoom);
         create.onClick.AddListener(CreateRoom);
         bot.onClick.AddListener(BotGame);
+        bot.gameObject.SetActive(false);
         join.gameObject.SetActive(false);
         create.gameObject.SetActive(false);
     }
 
     public override void OnConnectedToMaster()
     {
+        bot.gameObject.SetActive(true);
         join.gameObject.SetActive(true);
         create.gameObject.SetActive(true);
         connectionLabel.SetActive(false);
