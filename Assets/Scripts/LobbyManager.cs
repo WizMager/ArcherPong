@@ -17,14 +17,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.ConnectUsingSettings(); 
+            bot.gameObject.SetActive(false);
+            join.gameObject.SetActive(false);
+            create.gameObject.SetActive(false);
+            connectionLabel.SetActive(true);
         }
-
         join.onClick.AddListener(JoinRoom);
         create.onClick.AddListener(CreateRoom);
         bot.onClick.AddListener(BotGame);
-        bot.gameObject.SetActive(false);
-        join.gameObject.SetActive(false);
-        create.gameObject.SetActive(false);
     }
 
     public override void OnConnectedToMaster()
