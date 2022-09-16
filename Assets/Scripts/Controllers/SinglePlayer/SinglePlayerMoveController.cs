@@ -78,10 +78,17 @@ namespace Controllers.SinglePlayer
     
         private void OnGamePauseHandler(bool isPause)
         {
-            if (!isPause) return;
-            ReturnToStartPosition();
-            _hasArrow = true;
-            _stopMove = true;
+            if (isPause)
+            {
+                ReturnToStartPosition();
+                _hasArrow = true;
+                _stopMove = true;  
+            }
+            else
+            {
+                _stopMove = false;
+            }
+            
         }
         
         private void ReturnToStartPosition()

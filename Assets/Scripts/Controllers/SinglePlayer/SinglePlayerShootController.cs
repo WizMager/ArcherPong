@@ -29,6 +29,7 @@ namespace Controllers.SinglePlayer
         private bool _canShoot = true;
         private bool _timerEnable;
         private float _timeBeforeShoot;
+        private bool _gamePause;
 
         public SinglePlayerShootController(Camera mainCamera, ShootlessAreaView shootlessAreaView, Transform stickPosition, PlayerView playerView, SingleArrowView arrowView, PlayerData playerData)
         {
@@ -78,9 +79,9 @@ namespace Controllers.SinglePlayer
             TakeArrow(_timerEnable, _timeBeforeShoot);
         }
     
-        private void OnGamePauseHandler(bool isStop)
+        private void OnGamePauseHandler(bool isPause)
         {
-            _canShoot = !isStop;
+            _gamePause = isPause;
         }
     
         public void Awake()
@@ -134,6 +135,7 @@ namespace Controllers.SinglePlayer
     
         private void Shoot(InputAction.CallbackContext obj)
         {
+            if (_gamePause) return;
             if (!_hasArrow) return;
             if (!_canShoot) return;
             _arrowView.StopCoroutine(TimeBeforeShoot(_timeBeforeShoot));
@@ -177,6 +179,7 @@ namespace Controllers.SinglePlayer
             _shootlessArea.OnShootActivator -= OnShootActivatorHandler;
             _arrowView.OnCatch -= OnCatchHandler;
             _arrowView.OnMiss -= OnMissHandler;
+            _scoreController.OnGamePause -= OnGamePauseHandler;
         }
     }
 }

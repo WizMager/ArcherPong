@@ -2,6 +2,7 @@
 using Controllers.Interfaces;
 using Data;
 using Model;
+using UnityEngine;
 using Views;
 
 namespace Controllers.SinglePlayer
@@ -9,12 +10,12 @@ namespace Controllers.SinglePlayer
     public class SingleScoreController : ICleanup
     {
         public Action<bool> OnGamePause;
-        private readonly ScoreModel _scoreModel;
+        private readonly SingleScoreModel _scoreModel;
         private readonly SingleArrowView _arrowView;
 
         public SingleScoreController(UIView uiView, ScoreData scoreData, SingleArrowView arrowView)
         {
-            _scoreModel = new ScoreModel(uiView, scoreData);
+            _scoreModel = new SingleScoreModel(uiView, scoreData);
             _arrowView = arrowView;
             
             _scoreModel.OnStopGame += OnStopGameHandler;
